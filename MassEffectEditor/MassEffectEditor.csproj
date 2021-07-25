@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Aaron.MassEffectEditor.Coalesced\Aaron.MassEffectEditor.Coalesced.csproj" />
+    <ProjectReference Include="..\Aaron.MassEffectEditor.Core\Aaron.MassEffectEditor.Core.csproj" />
+    <ProjectReference Include="..\Aaron.MassEffectEditor.IO\Aaron.MassEffectEditor.IO.csproj" />
+  </ItemGroup>
+
+</Project>

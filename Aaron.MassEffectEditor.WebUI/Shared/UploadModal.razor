@@ -1,0 +1,55 @@
+﻿@using Aaron.MassEffectEditor.Coalesced;
+@inject Radzen.DialogService DialogService
+@inject MassEffectData MassEffectData
+
+<div>
+    <div class="row">
+        <h3>Upload File</h3>
+
+        <pre>C:\Program Files (x86)\Steam\steamapps\common\Mass Effect Legendary Edition\Game\ME3\BioGame\CookedPCConsole</pre>
+
+        <InputFile id="fileUploadInput" OnChange="@InputFileChange"></InputFile>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-end">
+            <RadzenButton Text="Ok" Click="@Confirm" Style="margin-bottom: 10px; width: 150px" />
+            <RadzenButton Text="Cacnel" Click="@Cancel" Style="margin-bottom: 10px; width: 150px" />
+        </div>
+    </div>
+</div>
+
+@code {
+
+    IBrowserFile selectedFile;
+
+    private void InputFileChange(InputFileChangeEventArgs e)
+    {
+        selectedFile = e.File;
+        Console.WriteLine(selectedFile.Name);
+    }
+
+
+    private async Task<bool> Confirm()
+    {
+        if(selectedFile != null)
+        {
+            MassEffectData.UnloadFile();
+            Console.WriteLine("Loading file...");
+            Container container = await MassEffectData.LoadFile(selectedFile);
+            Console.WriteLine("Loaded");
+            DialogService.Close(true);
+
+            return true;
+        }
+
+        return false;
+    }
+
+
+    private async Task<bool> Cancel()
+    {
+        DialogService.Close(false);
+        return false;
+    }
+
+}

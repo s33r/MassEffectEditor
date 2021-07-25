@@ -1,0 +1,48 @@
+﻿@using Aaron.MassEffectEditor.Coalesced;
+@using Aaron.MassEffectEditor.Coalesced.Records;
+@inject MassEffectData MassEffectDataService
+
+
+
+<RadzenPanelMenu Click="OnClick">
+    @if (MassEffectDataService.CurrentContainer != null)
+    {
+        @foreach (FileRecord fileRecord in MassEffectDataService.CurrentContainer.Files)
+        {
+            <RadzenPanelMenuItem Text="@fileRecord.FriendlyName" Value="fileRecord.Name" Icon="description"></RadzenPanelMenuItem>
+        }
+    }
+</RadzenPanelMenu>
+
+
+@code {
+    string testValue = "beans";
+
+    void OnClick(MenuItemEventArgs e)
+    {
+        Console.WriteLine("{0} / {1}", e.Text, e.Value);
+    }
+
+    void OnExpand(TreeExpandEventArgs args)
+    {
+        if (args.Value is string text)
+        {
+            Console.WriteLine($"Text: {text}");
+        }
+        else
+        {
+            Console.WriteLine(args.Value);
+        }
+    }
+
+    void OnChange(TreeEventArgs args)
+    {
+        Console.WriteLine($"Item Text: {args.Text}");
+    }
+
+    public new void StateHasChanged()
+    {
+        base.StateHasChanged();
+    }
+
+}

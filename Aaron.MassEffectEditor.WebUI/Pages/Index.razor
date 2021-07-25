@@ -1,0 +1,48 @@
+﻿@page "/"
+@inject DialogService DialogService
+
+
+<div>
+    <div class="row">
+        <RadzenMenu Click="OnClick">
+            <RadzenMenuItem Value="MENU_UPLOAD" Text="Upload File" Icon="file_upload"></RadzenMenuItem>
+            <RadzenMenuItem Value="MENU_DOWNLOAD" Text="Download File" Icon="file_download"></RadzenMenuItem>
+            <RadzenMenuItem Value="MENU_ABOUT" Text="About" Icon="info"></RadzenMenuItem>
+        </RadzenMenu>
+    </div>
+
+    <div class="row">
+        <ContainerTree @ref="FileTree"></ContainerTree>
+    </div>
+
+</div>
+
+
+@code {
+
+    public readonly string MENU_UPLOAD = "upload";
+    public readonly string MENU_DOWNLOAD = "download";
+    public readonly string MENU_ABOUT = "about";
+
+    protected ContainerTree FileTree;
+
+    private async Task OnClick(MenuItemEventArgs e)
+    {
+        string value = e.Value.ToString();
+
+        if (value == MENU_ABOUT)
+        {
+            var result = await DialogService.OpenAsync<AboutModal>("About");
+        }
+        else if (value == MENU_DOWNLOAD)
+        {
+            Console.WriteLine("File Download");
+        }
+        else if (value == MENU_UPLOAD)
+        {
+            var result = await DialogService.OpenAsync<UploadModal>("Upload File");
+            Console.WriteLine("somethining - {0}", result);
+            FileTree.StateHasChanged();
+        }
+    }
+}

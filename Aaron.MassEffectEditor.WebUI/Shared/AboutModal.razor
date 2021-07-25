@@ -1,0 +1,15 @@
+﻿@inject Radzen.DialogService DialogService
+
+<div>
+    <div class="row">
+        <h3>Mass Effect Editor</h3>
+        <p>
+            Currently supports modifying Coalesced.bin for Mass Effect 3 - more to come!
+        </p>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-end">
+            <RadzenButton Text="Ok" Click="() => DialogService.Close(true)" Style="margin-bottom: 10px; width: 150px" />
+        </div>
+    </div>
+</div>

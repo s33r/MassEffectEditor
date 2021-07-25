@@ -12,36 +12,24 @@ namespace Aaron.MassEffectEditor.Coalesced.Records
     {
         public string Name { get; set; }
 
-        private List<string> values;
+        private List<string> _values;
 
         public IRecord Parent { get; internal set; }
 
-        public string Path
-        {
-            get
-            {
-                return Parent.Parent.Name + '/' + Parent.Name + '/' + Name;
-            }
-        }
+        public string Path => Parent.Parent.Name + '/' + Parent.Name + '/' + Name;
 
-        public int Count { get { return values.Count; } }
+        public int Count => _values.Count;
 
         public string this[int index]
         {
-            get
-            {
-                return values[index];
-            }
-            set
-            {
-                values[index] = value;
-            }
+            get => _values[index];
+            set => _values[index] = value;
         }
 
         public EntryRecord(List<string> items, string name)
         {
             Name = name;
-            values = new List<string>(items);
+            _values = new List<string>(items);
 
         }
 
@@ -58,16 +46,21 @@ namespace Aaron.MassEffectEditor.Coalesced.Records
 
         public void SetValues(IEnumerable<string> items)
         {
-            values = new List<string>(items);
+            _values = new List<string>(items);
         }
 
         public override string ToString()
         {
-            return string.Format("EntryRecord [{0} Values] {1}", values.Count, Name);
+            return $"EntryRecord [{_values.Count} Values] {Name}";
         }
 
         public bool Equals(IRecord other)
         {
+            if (other == null)
+            {
+                return false;
+            }
+
             return other.Name == Name;
         }
 
@@ -87,12 +80,12 @@ namespace Aaron.MassEffectEditor.Coalesced.Records
 
         IEnumerator<string> IEnumerable<string>.GetEnumerator()
         {
-            return values.GetEnumerator();
+            return _values.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            return values.GetEnumerator();
+            return _values.GetEnumerator();
         }
 
 

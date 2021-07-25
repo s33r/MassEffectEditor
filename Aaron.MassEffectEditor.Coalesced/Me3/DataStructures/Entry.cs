@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
 {
-    class Entry
+    internal class Entry
     {
         public StandardIndexEntry Parent { get; set; }
         public StandardIndex Index { get; set; }
@@ -19,7 +19,7 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
         public Entry(ushort count, StandardIndexEntry parent)
         {
             Parent = parent;
-            Index = new(count);
+            Index = new StandardIndex(count);
             Items = new Item[count];
 
             for (int i = 0; i < count; i++)

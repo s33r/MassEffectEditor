@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Aaron.MassEffectEditor.Coalesced.Records
 {
-    public interface IRecordCollection<T>
+    public interface IRecordCollection<out T>
     {
         T Values { get; }
     }

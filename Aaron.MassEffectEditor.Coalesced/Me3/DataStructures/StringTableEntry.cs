@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
 {
-    class StringTableEntry : IEquatable<StringTableEntry>
+    internal class StringTableEntry : IEquatable<StringTableEntry>
     {
         public string Value { get; set; }
         public uint Offset { get; set; }
@@ -22,7 +22,7 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
 
         public override string ToString()
         {
-            return string.Format("[Offset={0}][Checksum={1:X}] {2}", Offset, Checksum, Value);
+            return $"[Offset={Offset}][Checksum={Checksum:X}] {Value}";
         }
 
         public StringTableEntry()
@@ -52,12 +52,17 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
 
         public bool Equals(StringTableEntry other)
         {
+            if (other == null)
+            {
+                return false;
+            }
+
             return other.Checksum == Checksum;
         }
 
         public override bool Equals(object obj)
         {
-            if ((obj == null) || !GetType().Equals(obj.GetType()))
+            if ((obj == null) || GetType() != obj.GetType())
             {
                 return false;
             }

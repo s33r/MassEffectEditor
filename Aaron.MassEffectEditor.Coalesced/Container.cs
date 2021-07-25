@@ -12,7 +12,7 @@ namespace Aaron.MassEffectEditor.Coalesced
 {
     public class Container : IEnumerable<IRecord>
     {
-        public List<FileRecord> Files { get; private set; }
+        public List<FileRecord> Files { get; }
 
         public Container()
         {
@@ -28,13 +28,7 @@ namespace Aaron.MassEffectEditor.Coalesced
             Files = new List<FileRecord>(records);
         }
 
-        public int RecordCount
-        {
-            get
-            {
-                return GetEntries().Count();
-            }
-        }
+        public int RecordCount => GetEntries().Count();
 
 
         public void Sort(Comparison<IRecord> comparison)
@@ -132,7 +126,7 @@ namespace Aaron.MassEffectEditor.Coalesced
         public string GetData(out int longestLength)
         {
             int longest = 0;
-            StringBuilder dataBuffer = new StringBuilder();
+            StringBuilder dataBuffer = new();
 
             foreach (string item in GetItems())
             {
@@ -155,24 +149,24 @@ namespace Aaron.MassEffectEditor.Coalesced
 
         public string DumpRecords()
         {
-            StringBuilder output = new StringBuilder();
+            StringBuilder output = new();
 
             foreach (FileRecord fileRecord in Files)
             {
-                output.AppendLine(string.Format("{0}", fileRecord.Name));
+                output.AppendLine($"{fileRecord.Name}");
 
                 foreach (SectionRecord sectionRecord in fileRecord)
                 {
-                    output.AppendLine(string.Format("    {0}", sectionRecord.Name));
+                    output.AppendLine($"    {sectionRecord.Name}");
 
                     foreach (EntryRecord entryRecord in sectionRecord)
                     {
-                        output.AppendLine(string.Format("        {0}", entryRecord.Name));
+                        output.AppendLine($"        {entryRecord.Name}");
 
                         int valueIndex = 0;
                         foreach (string value in entryRecord)
                         {
-                            output.AppendLine(string.Format("            [{0}] {1}", valueIndex++, value));
+                            output.AppendLine($"            [{valueIndex++}] {value}");
                         }
                     }
                 }

@@ -1,13 +1,13 @@
 ﻿@page "/"
-@inject DialogService DialogService
+@inject DialogService _dialogService
 
 
 <div>
     <div class="row">
         <RadzenMenu Click="OnClick">
-            <RadzenMenuItem Value="MENU_UPLOAD" Text="Upload File" Icon="file_upload"></RadzenMenuItem>
-            <RadzenMenuItem Value="MENU_DOWNLOAD" Text="Download File" Icon="file_download"></RadzenMenuItem>
-            <RadzenMenuItem Value="MENU_ABOUT" Text="About" Icon="info"></RadzenMenuItem>
+            <RadzenMenuItem Value="MenuUpload" Text="Upload File" Icon="file_upload"></RadzenMenuItem>
+            <RadzenMenuItem Value="MenuDownload" Text="Download File" Icon="file_download"></RadzenMenuItem>
+            <RadzenMenuItem Value="MenuAbout" Text="About" Icon="info"></RadzenMenuItem>
         </RadzenMenu>
     </div>
 
@@ -20,9 +20,9 @@
 
 @code {
 
-    public readonly string MENU_UPLOAD = "upload";
-    public readonly string MENU_DOWNLOAD = "download";
-    public readonly string MENU_ABOUT = "about";
+    public readonly string MenuUpload = "upload";
+    public readonly string MenuDownload = "download";
+    public readonly string MenuAbout = "about";
 
     protected ContainerTree FileTree;
 
@@ -30,18 +30,17 @@
     {
         string value = e.Value.ToString();
 
-        if (value == MENU_ABOUT)
+        if (value == MenuAbout)
         {
-            var result = await DialogService.OpenAsync<AboutModal>("About");
+            var result = await _dialogService.OpenAsync<AboutModal>("About");
         }
-        else if (value == MENU_DOWNLOAD)
+        else if (value == MenuDownload)
         {
             Console.WriteLine("File Download");
         }
-        else if (value == MENU_UPLOAD)
+        else if (value == MenuUpload)
         {
-            var result = await DialogService.OpenAsync<UploadModal>("Upload File");
-            Console.WriteLine("somethining - {0}", result);
+            var result = await _dialogService.OpenAsync<UploadModal>("Upload File");
             FileTree.StateHasChanged();
         }
     }

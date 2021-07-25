@@ -23,6 +23,11 @@
 // is this code terrible?
 // yup!
 
+
+/*
+ * Source modified to align with the rest of the projects conventions. - Aaron
+ */
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -32,8 +37,8 @@ namespace Aaron.MassEffectEditor.Core.Compression.Huffman
 {
     public class Encoder
     {
-        private Node _Root;
-        private readonly Dictionary<char, BitArray> _Codes = new Dictionary<char, BitArray>();
+        private Node _root;
+        private readonly Dictionary<char, BitArray> _codes = new();
 
         public int TotalBits { get; private set; }
 
@@ -41,20 +46,20 @@ namespace Aaron.MassEffectEditor.Core.Compression.Huffman
         {
             if (text == null)
             {
-                throw new ArgumentNullException("text");
+                throw new ArgumentNullException(nameof(text));
             }
 
-            this._Root = null;
+            this._root = null;
             var frequencies = new Dictionary<char, int>();
-            this._Codes.Clear();
+            this._codes.Clear();
 
             foreach (var t in text)
             {
-                int frequency;
-                if (frequencies.TryGetValue(t, out frequency) == false)
+                if (frequencies.TryGetValue(t, out int frequency) == false)
                 {
                     frequency = 0;
                 }
+
                 frequencies[t] = frequency + 1;
             }
 
@@ -89,21 +94,20 @@ namespace Aaron.MassEffectEditor.Core.Compression.Huffman
                     nodes.Add(parent);
                 }
 
-                this._Root = nodes.FirstOrDefault();
+                this._root = nodes.FirstOrDefault();
             }
 
             foreach (var frequency in frequencies)
             {
-                var bits = Traverse(this._Root, frequency.Key, new List<bool>());
+                var bits = Traverse(this._root, frequency.Key, new List<bool>());
                 if (bits == null)
                 {
-                    throw new InvalidOperationException(string.Format(
-                        "could not traverse '{0}'", frequency.Key));
+                    throw new InvalidOperationException($"could not traverse '{frequency.Key}'");
                 }
-                this._Codes.Add(frequency.Key, new BitArray(bits.ToArray()));
+                this._codes.Add(frequency.Key, new BitArray(bits.ToArray()));
             }
 
-            this.TotalBits = GetTotalBits(this._Root);
+            this.TotalBits = GetTotalBits(this._root);
         }
 
         private static int GetTotalBits(Node root)
@@ -179,7 +183,7 @@ namespace Aaron.MassEffectEditor.Core.Compression.Huffman
 
         private int Encode(char symbol, BitArray bits, int offset)
         {
-            var code = this._Codes[symbol];
+            var code = this._codes[symbol];
             for (int i = 0; i < code.Length; i++)
             {
                 bits[offset + i] = code[i];
@@ -191,17 +195,15 @@ namespace Aaron.MassEffectEditor.Core.Compression.Huffman
         {
             if (text == null)
             {
-                throw new ArgumentNullException("text");
+                throw new ArgumentNullException(nameof(text));
             }
 
             var bitCount = 0;
             foreach (var t in text)
             {
-                if (this._Codes.ContainsKey(t) == false)
+                if (this._codes.ContainsKey(t) == false)
                 {
-                    throw new ArgumentException(string.Format(
-                        "could not lookup '{0}'", t),
-                                                "text");
+                    throw new ArgumentException($"could not lookup '{t}'", nameof(text));
                 }
 
                 bitCount += this.Encode(t, bits, offset + bitCount);
@@ -216,10 +218,10 @@ namespace Aaron.MassEffectEditor.Core.Compression.Huffman
             var mapping = new Dictionary<Node, Pair>();
 
             var queue = new Queue<Node>();
-            queue.Enqueue(this._Root);
+            queue.Enqueue(this._root);
 
             var root = new Pair();
-            mapping.Add(this._Root, root);
+            mapping.Add(this._root, root);
 
             while (queue.Count > 0)
             {

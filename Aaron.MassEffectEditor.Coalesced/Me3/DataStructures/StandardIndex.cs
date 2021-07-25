@@ -14,14 +14,8 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
 
         public StandardIndexEntry this[int index]
         {
-            get
-            {
-                return Table[index];
-            }
-            set
-            {
-                Table[index] = value;
-            }
+            get => Table[index];
+            set => Table[index] = value;
         }
 
         public StandardIndex() { }
@@ -73,7 +67,7 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
 
         public override string ToString()
         {
-            return string.Format("{0} ({1} bytes)", Count, Size());
+            return $"{Count} ({Size()} bytes)";
         }
 
     }

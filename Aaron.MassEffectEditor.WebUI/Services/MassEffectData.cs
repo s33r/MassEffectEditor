@@ -22,7 +22,7 @@ namespace Aaron.MassEffectEditor.WebUI.Services
             CurrentFile = file;
 
             Stream fileStream = file.OpenReadStream(MAX_FILE_SIZE);
-            MemoryStream memoryStream = new MemoryStream();
+            MemoryStream memoryStream = new();
 
             await fileStream.CopyToAsync(memoryStream);
 

@@ -13,13 +13,13 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
 {
     class DataBlock : IBlock<Codec>
     {
-        public Container Container { get; set; } = new Container();
+        public Container Container { get; set; } = new();
 
         public void Read(byte[] data, Codec codec)
         {            
-            BinaryReader indexInput = new BinaryReader(new MemoryStream(data));
+            BinaryReader indexInput = new(new MemoryStream(data));
 
-            DataStructures.IndexContainer indexContainer = new DataStructures.IndexContainer();
+            DataStructures.IndexContainer indexContainer = new();
             indexContainer.Read(indexInput);
             indexContainer.Dump(codec.Name);
 
@@ -28,10 +28,10 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
         public void Write(BinaryWriter output, Codec codec)
         {
 
-            MemoryStream bufferStream = new MemoryStream();
-            BinaryWriter buffer = new BinaryWriter(bufferStream);
+            MemoryStream bufferStream = new();
+            BinaryWriter buffer = new(bufferStream);
 
-            BitArray compressedData = new BitArray(codec.HuffmanTree.Encoder.TotalBits);
+            BitArray compressedData = new(codec.HuffmanTree.Encoder.TotalBits);
 
             var indexContainer = DataStructures.IndexContainer.FromRecords(Container, codec.StringTable, codec.HuffmanTree.Encoder, compressedData);
             int expectedLength = indexContainer.TotalSize();
@@ -58,7 +58,7 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
 
         public string Dump()
         {
-            StringBuilder output = new StringBuilder();
+            StringBuilder output = new();
 
             output.AppendLine("Nothing here yet");
 
@@ -67,7 +67,7 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
 
         public void Dump(string rootName)
         {
-            string fileName = string.Format("{0}.data.txt", rootName);
+            string fileName = $"{rootName}.data.txt";
             string outputLocation = Path.Join(Configuration.Instance.WorkingLocation, fileName);
 
             string text = Dump();

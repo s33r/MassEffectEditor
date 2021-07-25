@@ -1,11 +1,12 @@
 ﻿@using Aaron.MassEffectEditor.Coalesced;
-@inject Radzen.DialogService DialogService
-@inject MassEffectData MassEffectData
+@inject Radzen.DialogService _dialogService
+@inject MassEffectData _massEffectData
 
 <div>
     <div class="row">
         <h3>Upload File</h3>
 
+        @* ReSharper disable once MarkupTextTypo *@
         <pre>C:\Program Files (x86)\Steam\steamapps\common\Mass Effect Legendary Edition\Game\ME3\BioGame\CookedPCConsole</pre>
 
         <InputFile id="fileUploadInput" OnChange="@InputFileChange"></InputFile>
@@ -20,24 +21,24 @@
 
 @code {
 
-    IBrowserFile selectedFile;
+    IBrowserFile _selectedFile;
 
     private void InputFileChange(InputFileChangeEventArgs e)
     {
-        selectedFile = e.File;
-        Console.WriteLine(selectedFile.Name);
+        _selectedFile = e.File;
+        Console.WriteLine(_selectedFile.Name);
     }
 
 
     private async Task<bool> Confirm()
     {
-        if(selectedFile != null)
+        if(_selectedFile != null)
         {
-            MassEffectData.UnloadFile();
+            _massEffectData.UnloadFile();
             Console.WriteLine("Loading file...");
-            Container container = await MassEffectData.LoadFile(selectedFile);
+            Container container = await _massEffectData.LoadFile(_selectedFile);
             Console.WriteLine("Loaded");
-            DialogService.Close(true);
+            _dialogService.Close(true);
 
             return true;
         }
@@ -48,7 +49,7 @@
 
     private async Task<bool> Cancel()
     {
-        DialogService.Close(false);
+        _dialogService.Close(false);
         return false;
     }
 

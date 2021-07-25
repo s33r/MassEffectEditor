@@ -13,45 +13,36 @@ namespace Aaron.MassEffectEditor.Coalesced.Records
         : IRecord, IEquatable<IRecord>, IList<SectionRecord>
     {
         public string Name { get; set; }
-        public string FriendlyName
-        {
-            get
-            {
-                return System.IO.Path.GetFileName(Name.Replace("\\", "/")); //Windows can use either slash, but all others need unix style.
-            }
-        }
-        public string Path { get { return FriendlyName; } }
+        public string FriendlyName => System.IO.Path.GetFileName(Name.Replace("\\", "/")); //Windows can use either slash, but all others need unix style.
+        public string Path => FriendlyName;
 
-        public IRecord Parent { get { return null; } }
+        public IRecord Parent => null;
 
-        public int Count { get { return values.Count; } }
+        public int Count => _values.Count;
 
-        public bool IsReadOnly { get { return false; } }
+        public bool IsReadOnly => false;
 
-        private List<SectionRecord> values;
+        private List<SectionRecord> _values;
 
         public SectionRecord this[int index]
         {
-            get
-            {
-                return values[index];
-            }
+            get => _values[index];
             set
             {
                 value.Parent = this;
-                values[index] = value;
+                _values[index] = value;
             }
         }
 
         public FileRecord(List<SectionRecord> sections, string name)
         {
             Name = name;
-            values = new List<SectionRecord>();
+            _values = new List<SectionRecord>();
 
             foreach (SectionRecord sectionRecord in sections)
             {
                 sectionRecord.Parent = this;
-                values.Add(sectionRecord);
+                _values.Add(sectionRecord);
             }
         }
 
@@ -70,18 +61,18 @@ namespace Aaron.MassEffectEditor.Coalesced.Records
 
         public void SetValues(IEnumerable<SectionRecord> sections)
         {
-            values = new List<SectionRecord>();
+            _values = new List<SectionRecord>();
 
             foreach (SectionRecord section in sections)
             {
                 section.Parent = this;
-                values.Add(section);
+                _values.Add(section);
             }
         }
 
         public override string ToString()
         {
-            return string.Format("FileRecord [{0} Values] {1}", values.Count, Name);
+            return $"FileRecord [{_values.Count} Values] {Name}";
         }
 
         public bool Equals(IRecord other)
@@ -110,67 +101,67 @@ namespace Aaron.MassEffectEditor.Coalesced.Records
 
         public IEnumerator GetEnumerator()
         {
-            return values.GetEnumerator();
+            return _values.GetEnumerator();
         }
 
         IEnumerator<SectionRecord> IEnumerable<SectionRecord>.GetEnumerator()
         {
-            return values.GetEnumerator();
+            return _values.GetEnumerator();
         }
 
         public int IndexOf(SectionRecord item)
         {
-            return values.IndexOf(item);
+            return _values.IndexOf(item);
         }
 
         public void Insert(int index, SectionRecord item)
         {
             item.Parent = this;
-            values.Insert(index, item);
+            _values.Insert(index, item);
         }
 
         public void RemoveAt(int index)
         {
-            values[index].Parent = null;
-            values.RemoveAt(index);
+            _values[index].Parent = null;
+            _values.RemoveAt(index);
         }
 
         public void Add(SectionRecord item)
         {
             item.Parent = this;
-            values.Add(item);
+            _values.Add(item);
         }
 
         public void Clear()
         {
-            foreach (SectionRecord item in values)
+            foreach (SectionRecord item in _values)
             {
                 item.Parent = null;
             }
 
-            values.Clear();
+            _values.Clear();
         }
 
         public bool Contains(SectionRecord item)
         {
-            return values.Contains(item);
+            return _values.Contains(item);
         }
 
         public void CopyTo(SectionRecord[] array, int arrayIndex)
         {
-            values.CopyTo(array, arrayIndex);
+            _values.CopyTo(array, arrayIndex);
             
         }
 
         public bool Remove(SectionRecord item)
         {
             item.Parent = null;
-            return Remove(item);
+            return _values.Remove(item);
         }
 
         public void Sort(Comparison<IRecord> comparer)
         {
-            values.Sort(comparer);
+            _values.Sort(comparer);
         }
     }
 }

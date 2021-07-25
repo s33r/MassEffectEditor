@@ -19,7 +19,7 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
 
         public void Read(byte[] data, Codec codec)
         {
-            BinaryReader input = new BinaryReader(new MemoryStream(data));
+            BinaryReader input = new(new MemoryStream(data));
 
             ushort entryCount = input.ReadUInt16();
 
@@ -27,9 +27,11 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
 
             for (int currentEntry = 0; currentEntry < entryCount; currentEntry++)
             {
-                Pair pair = new Pair();
-                pair.Left = input.ReadInt32();
-                pair.Right = input.ReadInt32();
+                Pair pair = new()
+                {
+                    Left = input.ReadInt32(), 
+                    Right = input.ReadInt32()
+                };
 
                 pairs.Add(pair);
             }
@@ -64,13 +66,13 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
 
         public string Dump()
         {
-            Text.StringBuilder output = new Text.StringBuilder();
+            Text.StringBuilder output = new();
 
-            output.AppendLine(string.Format("Count = {0}", HuffmanTuples.Count));
+            output.AppendLine($"Count = {HuffmanTuples.Count}");
 
             foreach(var tuple in HuffmanTuples)
             {
-                output.AppendLine(string.Format("({0,8}, {1,8})", tuple.Left, tuple.Right));
+                output.AppendLine($"({tuple.Left,8}, {tuple.Right,8})");
             }
 
             return output.ToString();
@@ -78,7 +80,7 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
 
         public void Dump(string rootName)
         {
-            string fileName = string.Format("{0}.huffman.txt", rootName);
+            string fileName = $"{rootName}.huffman.txt";
             string outputLocation = Path.Join(Configuration.Instance.WorkingLocation, fileName);
 
             string text = Dump();

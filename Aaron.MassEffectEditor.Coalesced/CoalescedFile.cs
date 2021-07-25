@@ -14,22 +14,22 @@ namespace Aaron.MassEffectEditor.Coalesced
 {
     public static class CoalescedFile
     {
-        private static Dictionary<Games, ICodec> codecs = new Dictionary<Games, ICodec>();
+        private static readonly Dictionary<Games, ICodec> _codecs = new();
 
         static CoalescedFile()
         {
-            codecs.Add(Games.Me3, new Me3.Codec());
+            _codecs.Add(Games.Me3, new Me3.Codec());
         }
 
 
         public static Container Load(Games game, byte[] data)
         {
-            if(!codecs.ContainsKey(game))
+            if(!_codecs.ContainsKey(game))
             {
                 throw new GameNotSupportedException(game);
             }
 
-            Codec codec = (Codec)codecs[game];
+            Codec codec = (Codec)_codecs[game];
             Container container = codec.Decode(data);
 
             return container;
@@ -44,12 +44,12 @@ namespace Aaron.MassEffectEditor.Coalesced
 
         public static byte[] Save(Games game, Container container)
         {
-            if (!codecs.ContainsKey(game))
+            if (!_codecs.ContainsKey(game))
             {
                 throw new GameNotSupportedException(game);
             }
 
-            Codec codec = (Codec)codecs[game];
+            Codec codec = (Codec)_codecs[game];
             byte[] data = codec.Encode(container);
 
             return data;
@@ -62,18 +62,18 @@ namespace Aaron.MassEffectEditor.Coalesced
             File.WriteAllBytes(outputLocation, data);
         }
 
-        public static void Compare(byte[] oldData, byte[] newData, byte[] gibbedData)
+        public static void Compare(byte[] oldData, byte[] newData, byte[] gibData)
         {
 
             //bool byteMatch = CompareBytes(oldData, newData);
 
-            Codec oCodec = new Codec("old");
-            Codec nCodec = new Codec("new");
-            Codec gCodec = new Codec("gib");
+            Codec oCodec = new("old");
+            Codec nCodec = new("new");
+            Codec gCodec = new("gib");
 
             Container oContainer = oCodec.Decode(oldData);
             Container nContainer = nCodec.Decode(newData);
-            Container gContainer = gCodec.Decode(gibbedData);
+            Container gContainer = gCodec.Decode(gibData);
 
             oCodec.Dump();
             nCodec.Dump();
@@ -108,7 +108,7 @@ namespace Aaron.MassEffectEditor.Coalesced
 
 
 
-        private static void dumpStringTable(Codec codec, StreamWriter output)
+        private static void DumpStringTable(Codec codec, StreamWriter output)
         {
             foreach (var entry in codec.StringTable.Entries)
             {

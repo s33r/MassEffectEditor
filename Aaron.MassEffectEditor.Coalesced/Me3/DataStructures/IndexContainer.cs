@@ -122,7 +122,7 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
                 }
             }
 
-            Container container = new Container(fileRecords);
+            Container container = new(fileRecords);
             //container.Sort();
 
             return container;
@@ -194,26 +194,26 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
 
         public string Dump()
         {
-            StringBuilder output = new StringBuilder();
+            StringBuilder output = new();
 
-            output.AppendLine(string.Format("Expected Size = {0}", TotalSize()));
+            output.AppendLine($"Expected Size = {TotalSize()}");
 
             foreach (StandardIndexEntry fileIndexEntry in Index.Table)
             {
-                output.AppendLine(string.Format("{0,10} | {1}", fileIndexEntry.Offset, fileIndexEntry.StringTableIndex));
+                output.AppendLine($"{fileIndexEntry.Offset,10} | {fileIndexEntry.StringTableIndex}");
             }
 
             output.AppendLine();
 
             foreach (Section section in Sections)
             {
-                output.AppendLine(string.Format("Section ({0} entries / {1} bytes)", section.Index.Count, section.Size()));
+                output.AppendLine($"Section ({section.Index.Count} entries / {section.Size()} bytes)");
                 foreach(Entry entry in section.Entries)
                 {
-                    output.AppendLine(string.Format("    Entry ({0} entries / {1} bytes)", entry.Index.Count, entry.Size()));
+                    output.AppendLine($"    Entry ({entry.Index.Count} entries / {entry.Size()} bytes)");
                     foreach (Item item in entry.Items)
                     {
-                        output.AppendLine(string.Format("        Item ({0} entries / {1} bytes)", item.Count, item.Size()));                        
+                        output.AppendLine($"        Item ({item.Count} entries / {item.Size()} bytes)");                        
                         foreach (int value in item.Values)
                         {
                             //output.AppendLine(value.ToString());
@@ -229,7 +229,7 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
         public void Dump(string rootName)
         {
 
-            string fileName = string.Format("{0}.index.txt", rootName);
+            string fileName = $"{rootName}.index.txt";
             string outputLocation = Path.Join(Configuration.Instance.WorkingLocation, fileName);
 
             string text = Dump();

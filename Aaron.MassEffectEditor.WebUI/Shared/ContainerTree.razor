@@ -1,13 +1,13 @@
 ﻿@using Aaron.MassEffectEditor.Coalesced;
 @using Aaron.MassEffectEditor.Coalesced.Records;
-@inject MassEffectData MassEffectDataService
+@inject MassEffectData _massEffectDataService
 
 
 
 <RadzenPanelMenu Click="OnClick">
-    @if (MassEffectDataService.CurrentContainer != null)
+    @if (_massEffectDataService.CurrentContainer != null)
     {
-        @foreach (FileRecord fileRecord in MassEffectDataService.CurrentContainer.Files)
+        @foreach (FileRecord fileRecord in _massEffectDataService.CurrentContainer.Files)
         {
             <RadzenPanelMenuItem Text="@fileRecord.FriendlyName" Value="fileRecord.Name" Icon="description"></RadzenPanelMenuItem>
         }
@@ -16,7 +16,7 @@
 
 
 @code {
-    string testValue = "beans";
+    string _testValue = "beans";
 
     void OnClick(MenuItemEventArgs e)
     {

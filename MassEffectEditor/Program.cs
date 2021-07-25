@@ -8,18 +8,18 @@ namespace MassEffectEditor
 {
     class Program
     {
-        private static string testInputLocation;
-        private static string gibbedLocation;
+        private static string _testInputLocation;
+        private static string _gibbedLocation;
 
         static void Main(string[] args)
         {
             Configuration.Instance.Initialize();
-            testInputLocation = Path.Join(Configuration.Instance.WorkingLocation, Path.GetFileName(Configuration.Instance.Game[Games.Me3].CoalescedConfigurationLocation));
-            gibbedLocation = Path.Join(Configuration.Instance.WorkingLocation, "Coalesced.bin.gib");
+            _testInputLocation = Path.Join(Configuration.Instance.WorkingLocation, Path.GetFileName(Configuration.Instance.Game[Games.Me3].CoalescedConfigurationLocation));
+            _gibbedLocation = Path.Join(Configuration.Instance.WorkingLocation, "Coalesced.bin.gib");
 
             BackupCoalesced();
 
-            string inputLocation = testInputLocation;
+            string inputLocation = _testInputLocation;
 
             Container container = CoalescedFile.Load(Games.Me3, inputLocation);
             string name = container.Files[0].FriendlyName;
@@ -38,7 +38,7 @@ namespace MassEffectEditor
         static void BackupCoalesced()
         {            
             string sourceLocation = Configuration.Instance.Game[Games.Me3].CoalescedConfigurationLocation;
-            string destinationLocation = testInputLocation;
+            string destinationLocation = _testInputLocation;
 
             File.Delete(destinationLocation);
 
@@ -48,7 +48,7 @@ namespace MassEffectEditor
 
         static void RestoreCoalesced()
         {
-            string sourceLocation = testInputLocation;
+            string sourceLocation = _testInputLocation;
             string destinationLocation = Configuration.Instance.Game[Games.Me3].CoalescedConfigurationLocation;
 
             File.Copy(sourceLocation, destinationLocation);
@@ -57,8 +57,8 @@ namespace MassEffectEditor
         static void Compare()
         {
             byte[] original = File.ReadAllBytes(Configuration.Instance.Game[Games.Me3].CoalescedConfigurationLocation);
-            byte[] mine = File.ReadAllBytes(testInputLocation);
-            byte[] gibbed = File.ReadAllBytes(gibbedLocation);
+            byte[] mine = File.ReadAllBytes(_testInputLocation);
+            byte[] gibbed = File.ReadAllBytes(_gibbedLocation);
 
             CoalescedFile.Compare(original, mine, gibbed);
         }

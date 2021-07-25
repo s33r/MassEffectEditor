@@ -12,7 +12,7 @@ namespace Aaron.MassEffectEditor.Core.Exceptions
         public Games Game { get; set; }
 
         public GameNotSupportedException(Games game)
-            :base(string.Format("This method does not support the game: {0}", game))
+            :base($"This method does not support the game: {game}")
         {
             Game = game;
         }

@@ -30,12 +30,12 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
                 }
             }
 
-            throw new KeyNotFoundException(string.Format("The entryValue {0} could not be found in the StringTable", entryValue));
+            throw new KeyNotFoundException($"The entryValue {entryValue} could not be found in the StringTable");
         }
 
         public void Read(byte[] data, Codec codec)
         {
-            BinaryReader input = new BinaryReader(new MemoryStream(data));
+            BinaryReader input = new(new MemoryStream(data));
 
             uint stringTableLength = input.ReadUInt32();
 
@@ -58,7 +58,7 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
 
                 if (!entry.Validate())
                 {
-                    throw new FormatException(string.Format("The CRC32 for text table entry does not match. {0}", entry));
+                    throw new FormatException($"The CRC32 for text table entry does not match. {entry}");
                 }
             }
 
@@ -71,7 +71,7 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
             {
                 if (!entry.Validate())
                 {
-                    throw new Exception(string.Format("Invalid Checksum for: {0}", entry));
+                    throw new Exception($"Invalid Checksum for: {entry}");
                 }
             }
         }
@@ -80,7 +80,7 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
         {
 
             List<StringTableEntry> stringTable = new List<StringTableEntry>();
-            StringBuilder dataBuffer = new StringBuilder();
+            StringBuilder dataBuffer = new();
 
             //TODO: verify that this isn't needed because of a read error
             stringTable.Add(new StringTableEntry("", 0, 0));
@@ -99,21 +99,8 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
 
             codec.Header.MaxKeyLength = stringTable.Max(s => s.Value.Length);
 
-            /**
-             *  The string table is laid out like
-             *  [Header] - 8 bytes
-             *      4 bytes -
-             *      4 bytes - Entry Count
-             *  [Index] - 8 bytes * Entry Count
-             *      4 bytes - CRC32 Checksum
-             *      4 butes - Offset
-             *  [Content] - Variable
-             *      2 bytes - string length
-             *      n bytes - string
-             *  
-             */
-            MemoryStream bufferStream = new MemoryStream();
-            BinaryWriter buffer = new BinaryWriter(bufferStream);
+            MemoryStream bufferStream = new();
+            BinaryWriter buffer = new(bufferStream);
 
             // First - Write out the [Content] section - needed so we can know the offsets.
             bufferStream.Position = HEADER_LENGTH + (INDEX_ENTRY_LENGTH * stringTable.Count);
@@ -148,11 +135,11 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
 
         public string Dump()
         {
-            StringBuilder output = new StringBuilder();
+            StringBuilder output = new();
 
             foreach (StringTableEntry entry in Entries)
             {
-                output.AppendLine(string.Format("[{0,8}] ({1,10}) {2}", entry.Offset, entry.Checksum, entry.Value));
+                output.AppendLine($"[{entry.Offset,8}] ({entry.Checksum,10}) {entry.Value}");
             }
 
             return output.ToString();
@@ -160,7 +147,7 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
 
         public void Dump(string rootName)
         {
-            string fileName = string.Format("{0}.strings.txt", rootName);
+            string fileName = $"{rootName}.strings.txt";
             string outputLocation = Path.Join(Configuration.Instance.WorkingLocation, fileName);
 
             string text = Dump();

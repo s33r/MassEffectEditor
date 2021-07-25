@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Aaron.MassEffectEditor.Coalesced.Me3
 {
-    class Codec : ICodec
+    internal class Codec : ICodec
     {
-        public Games Game { get; private set; } = Games.Me3;
+        public Games Game { get; } = Games.Me3;
 
         public string Name { get; set; }
 
@@ -25,17 +25,17 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
             Name = "Codec";
         }
 
-        public HeaderBlock Header { get; private set; } = new HeaderBlock();
-        public StringTableBlock StringTable { get; private set; } = new StringTableBlock();
-        public HuffmanTreeBlock HuffmanTree { get; private set; } = new HuffmanTreeBlock();
-        public DataBlock Data { get; private set; } = new DataBlock();
+        public HeaderBlock Header { get; } = new();
+        public StringTableBlock StringTable { get; } = new();
+        public HuffmanTreeBlock HuffmanTree { get; } = new();
+        public DataBlock Data { get; } = new();
         public BitArray CompressedData { get; set; }
 
         public Container Container { get; set; }
 
         public Container Decode(byte[] value)
         {
-            BinaryReader input = new BinaryReader(new MemoryStream(value));
+            BinaryReader input = new(new MemoryStream(value));
 
             Header.Read(input, this);
             StringTable.Read(input.ReadBytes((int)Header.StringTableLength), this);
@@ -43,7 +43,7 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
 
             byte[] indexData = input.ReadBytes((int)Header.IndexLength);
 
-            int compressedDataLength = input.ReadInt32(); //TODO: This should really be in the DataBlock, its just eaiser to do it here because if the interface
+            int compressedDataLength = input.ReadInt32(); //TODO: This should really be in the DataBlock, its just easier to do it here because if the interface
             CompressedData = new BitArray(input.ReadBytes((int)Header.DataLength));
 
             Data.Read(indexData, this);
@@ -57,8 +57,8 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
         {
             Container = value;
 
-            MemoryStream outputStream = new MemoryStream();
-            BinaryWriter output = new BinaryWriter(outputStream);
+            MemoryStream outputStream = new();
+            BinaryWriter output = new(outputStream);
             outputStream.Position = HeaderBlock.HEADER_LENGTH;
 
             StringTable.Write(output, this);

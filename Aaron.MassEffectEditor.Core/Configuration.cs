@@ -11,19 +11,21 @@ namespace Aaron.MassEffectEditor.Core
     {
 
         #region Singleton
-        private static readonly Configuration instance = new Configuration();
+        private static readonly Configuration _instance = new();
 
         static Configuration() { }
 
         private Configuration() { }
 
-        public static Configuration Instance { get { return instance; } }
+        // ReSharper disable once ConvertToAutoProperty
+        public static Configuration Instance => _instance;
+
         #endregion
 
         public string GameBaseLocation { get; set; }
         public string WorkingLocation { get; set; }
 
-        public Dictionary<Games, GameConfiguration> Game { get; } = new Dictionary<Games, GameConfiguration>();
+        public Dictionary<Games, GameConfiguration> Game { get; } = new();
 
         public void Initialize()
         {

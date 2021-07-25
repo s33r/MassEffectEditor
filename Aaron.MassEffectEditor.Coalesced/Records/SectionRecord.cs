@@ -15,40 +15,31 @@ namespace Aaron.MassEffectEditor.Coalesced.Records
 
         public IRecord Parent { get; internal set; }
 
-        public int Count { get { return values.Count; } }
+        public int Count => _values.Count;
 
-        public string Path
-        {
-            get
-            {
-                return Parent.Name + '/' + Name;
-            }
-        }
+        public string Path => Parent.Name + '/' + Name;
 
-        private List<EntryRecord> values;
+        private List<EntryRecord> _values;
 
         public EntryRecord this[int index]
         {
-            get
-            {
-                return values[index];
-            }
+            get => _values[index];
             set
             {
                 value.Parent = this;
-                values[index] = value;
+                _values[index] = value;
             }
         }
 
         public SectionRecord(List<EntryRecord> entries, string name)
         {
             Name = name;
-            values = new List<EntryRecord>();
+            _values = new List<EntryRecord>();
 
             foreach (EntryRecord entryRecord in entries)
             {
                 entryRecord.Parent = this;
-                values.Add(entryRecord);
+                _values.Add(entryRecord);
             }
         }
 
@@ -67,18 +58,18 @@ namespace Aaron.MassEffectEditor.Coalesced.Records
 
         public void SetValues(IEnumerable<EntryRecord> entries)
         {
-            values = new List<EntryRecord>();
+            _values = new List<EntryRecord>();
 
             foreach (EntryRecord entry in entries)
             {
                 entry.Parent = this;
-                values.Add(entry);
+                _values.Add(entry);
             }
         }
 
         public override string ToString()
         {
-            return string.Format("SectionRecord [{0} Values] {1}", values.Count, Name);
+            return $"SectionRecord [{_values.Count} Values] {Name}";
         }
 
         public bool Equals(IRecord other)
@@ -107,17 +98,17 @@ namespace Aaron.MassEffectEditor.Coalesced.Records
 
         public IEnumerator GetEnumerator()
         {
-            return values.GetEnumerator();
+            return _values.GetEnumerator();
         }
 
         IEnumerator<EntryRecord> IEnumerable<EntryRecord>.GetEnumerator()
         {
-            return values.GetEnumerator();
+            return _values.GetEnumerator();
         }
 
         public void Sort(Comparison<IRecord> comparer)
         {
-            values.Sort(comparer);
+            _values.Sort(comparer);
         }
     }
 }

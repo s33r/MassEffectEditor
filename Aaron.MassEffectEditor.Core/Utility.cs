@@ -7,7 +7,7 @@ namespace Aaron.MassEffectEditor.Core
         public static IEnumerable<T> CreateList<T>(int count)
             where T : new()
         {
-            List<T> result = new List<T>(count);
+            List<T> result = new(count);
 
             PopulateList(count, result);
 

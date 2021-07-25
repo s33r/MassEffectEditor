@@ -64,7 +64,7 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
 
         public void Write(BinaryWriter output, Codec codec)
         {
-            List<StringTableEntry> stringTable = new List<StringTableEntry>();
+            List<StringTableEntry> stringTable = new();
             StringBuilder dataBuffer = new();
 
             //TODO: verify that this isn't needed because of a read error

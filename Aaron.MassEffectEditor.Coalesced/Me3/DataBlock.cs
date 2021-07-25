@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Text;
+using Aaron.MassEffectEditor.Coalesced.Me3.DataStructures;
 
 namespace Aaron.MassEffectEditor.Coalesced.Me3
 {
@@ -29,13 +30,13 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
 
             BitArray compressedData = new(codec.HuffmanTree.Encoder.TotalBits);
 
-            var indexContainer = DataStructures.IndexContainer.FromRecords(Container, codec.StringTable,
+            IndexContainer indexContainer = IndexContainer.FromRecords(Container, codec.StringTable,
                 codec.HuffmanTree.Encoder, compressedData);
             int expectedLength = indexContainer.TotalSize();
             indexContainer.Write(buffer);
 
             byte[] indexData = bufferStream.ToArray();
-            var data = new byte[(compressedData.Length - 1) / 8 + 1];
+            byte[] data = new byte[(compressedData.Length - 1) / 8 + 1];
             compressedData.CopyTo(data, 0);
 
             codec.Header.IndexLength = (uint) indexData.Length;

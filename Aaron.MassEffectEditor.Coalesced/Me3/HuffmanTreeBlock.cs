@@ -20,7 +20,7 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
 
             ushort entryCount = input.ReadUInt16();
 
-            List<Pair> pairs = new List<Pair>();
+            List<Pair> pairs = new();
 
             for (int currentEntry = 0; currentEntry < entryCount; currentEntry++)
             {

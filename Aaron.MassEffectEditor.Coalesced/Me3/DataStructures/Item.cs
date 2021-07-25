@@ -53,7 +53,7 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
 
         public List<string> Decode(HuffmanTreeBlock huffmanTree, BitArray compressedData, int maxValueLength)
         {
-            List<string> result = new List<string>();
+            List<string> result = new();
 
             for (int i = 0; i < Values.Length; i++)
             {

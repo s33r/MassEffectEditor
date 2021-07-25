@@ -1,11 +1,9 @@
 ﻿using Aaron.MassEffectEditor.Core;
 using Aaron.MassEffectEditor.Core.Compression.Huffman;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Text = System.Text;
-using System.Threading.Tasks;
 
 namespace Aaron.MassEffectEditor.Coalesced.Me3
 {

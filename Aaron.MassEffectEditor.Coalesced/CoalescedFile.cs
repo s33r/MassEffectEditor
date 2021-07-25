@@ -1,14 +1,9 @@
 ﻿using Aaron.MassEffectEditor.Coalesced.Me3;
-using Aaron.MassEffectEditor.Coalesced.Records;
 using Aaron.MassEffectEditor.Core;
 using Aaron.MassEffectEditor.Core.Exceptions;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Aaron.MassEffectEditor.Coalesced
 {
@@ -18,7 +13,7 @@ namespace Aaron.MassEffectEditor.Coalesced
 
         static CoalescedFile()
         {
-            _codecs.Add(Games.Me3, new Me3.Codec());
+            _codecs.Add(Games.Me3, new Codec());
         }
 
 

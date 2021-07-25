@@ -1,7 +1,5 @@
 ﻿using Aaron.MassEffectEditor.Coalesced;
 using Aaron.MassEffectEditor.Core;
-using System;
-using System.Collections.Generic;
 using System.IO;
 
 namespace MassEffectEditor

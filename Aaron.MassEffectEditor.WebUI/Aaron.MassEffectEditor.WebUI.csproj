@@ -1,7 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>Web user interface for Aaron's Mass Effect Editor</Description>
+    <Copyright>Aaron Willows</Copyright>
   </PropertyGroup>
 
   <ItemGroup>

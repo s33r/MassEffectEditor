@@ -11,11 +11,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aaron.MassEffectEditor.IO",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aaron.MassEffectEditor.Coalesced", "Aaron.MassEffectEditor.Coalesced\Aaron.MassEffectEditor.Coalesced.csproj", "{AA9A9A2F-05BA-4E36-8BD7-64AD94739EAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aaron.MassEffectEditor.WebUI", "Aaron.MassEffectEditor.WebUI\Aaron.MassEffectEditor.WebUI.csproj", "{B36BB524-F6FB-46AD-ABD4-32DB4F00CCBD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aaron.MassEffectEditor.WebUI", "Aaron.MassEffectEditor.WebUI\Aaron.MassEffectEditor.WebUI.csproj", "{B36BB524-F6FB-46AD-ABD4-32DB4F00CCBD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A3583991-6B84-435F-946C-400BB60D4729}"
 	ProjectSection(SolutionItems) = preProject
+		license.md = license.md
 		notes.md = notes.md
+		readme.md = readme.md
 	EndProjectSection
 EndProject
 Global

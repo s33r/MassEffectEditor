@@ -22,7 +22,7 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
 
             for (int i = 0; i < count; i++)
             {
-                Table[i] = new();
+                Table[i] = new StandardIndexEntry();
             }
         }
 
@@ -33,7 +33,7 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
 
         public static ushort Size(int count)
         {
-            return (ushort)(2 + (count * StandardIndexEntry.Size()));
+            return (ushort) (2 + (count * StandardIndexEntry.Size()));
         }
 
 
@@ -64,6 +64,5 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
         {
             return $"{Count} ({Size()} bytes)";
         }
-
     }
 }

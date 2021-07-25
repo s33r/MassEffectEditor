@@ -47,22 +47,6 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
         }
 
 
-
-        public void Read(BinaryReader input, Codec codec)
-        {
-            MagicWord = input.ReadUInt32();
-            Version = input.ReadUInt32();
-            Validate(codec);
-            MaxKeyLength = input.ReadInt32();
-            MaxValueLength = input.ReadInt32();
-            StringTableLength = input.ReadUInt32();
-            HuffmanLength = input.ReadUInt32();
-            IndexLength = input.ReadUInt32();
-            DataLength = input.ReadUInt32();
-        }
-
-
-
         public void Write(BinaryWriter output, Codec codec)
         {
             MagicWord = MAGIC_WORD;
@@ -76,18 +60,6 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
             output.Write(HuffmanLength);
             output.Write(IndexLength);
             output.Write(DataLength);
-        }
-
-        public bool Match(HeaderBlock other)
-        {
-            return (MagicWord == other.MagicWord)
-                && (Version == other.Version)
-                && (MaxKeyLength == other.MaxKeyLength)
-                && (MaxValueLength == other.MaxValueLength)
-                && (StringTableLength == other.StringTableLength)
-                && (HuffmanLength == other.HuffmanLength)
-                && (IndexLength == other.IndexLength)
-                && (DataLength == other.DataLength);
         }
 
         public string Dump()
@@ -117,5 +89,30 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
             File.WriteAllText(outputLocation, text);
         }
 
+
+        public void Read(BinaryReader input, Codec codec)
+        {
+            MagicWord = input.ReadUInt32();
+            Version = input.ReadUInt32();
+            Validate(codec);
+            MaxKeyLength = input.ReadInt32();
+            MaxValueLength = input.ReadInt32();
+            StringTableLength = input.ReadUInt32();
+            HuffmanLength = input.ReadUInt32();
+            IndexLength = input.ReadUInt32();
+            DataLength = input.ReadUInt32();
+        }
+
+        public bool Match(HeaderBlock other)
+        {
+            return (MagicWord == other.MagicWord)
+                   && (Version == other.Version)
+                   && (MaxKeyLength == other.MaxKeyLength)
+                   && (MaxValueLength == other.MaxValueLength)
+                   && (StringTableLength == other.StringTableLength)
+                   && (HuffmanLength == other.HuffmanLength)
+                   && (IndexLength == other.IndexLength)
+                   && (DataLength == other.DataLength);
+        }
     }
 }

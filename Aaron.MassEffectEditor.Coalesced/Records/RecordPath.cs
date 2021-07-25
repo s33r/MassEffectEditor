@@ -4,7 +4,6 @@ namespace Aaron.MassEffectEditor.Coalesced.Records
 {
     public class RecordPath
     {
-
         public const char PATH_SEPARATOR = '/';
 
         public string FileName { get; set; }
@@ -12,8 +11,8 @@ namespace Aaron.MassEffectEditor.Coalesced.Records
         public string EntryName { get; set; }
 
         public override string ToString()
-        {            
-            if(FileName == null)
+        {
+            if (FileName == null)
             {
                 return string.Empty;
             }
@@ -22,11 +21,11 @@ namespace Aaron.MassEffectEditor.Coalesced.Records
 
             buffer.Append(FileName);
 
-            if(SectionName != null)
+            if (SectionName != null)
             {
                 buffer.Append(PATH_SEPARATOR + SectionName);
 
-                if(EntryName != null)
+                if (EntryName != null)
                 {
                     buffer.Append(PATH_SEPARATOR + EntryName);
                 }
@@ -37,25 +36,25 @@ namespace Aaron.MassEffectEditor.Coalesced.Records
 
         public static RecordPath FromString(string path)
         {
-            if(string.IsNullOrEmpty(path))
+            if (string.IsNullOrEmpty(path))
             {
                 return new RecordPath();
             }
 
             string[] elements = path.Split(PATH_SEPARATOR);
 
-            if(elements.Length == 0)
+            if (elements.Length == 0)
             {
                 return new RecordPath();
             }
 
             RecordPath result = new() {EntryName = elements[0]};
 
-            if(elements.Length > 1)
+            if (elements.Length > 1)
             {
                 result.SectionName = elements[1];
 
-                if(elements.Length > 2)
+                if (elements.Length > 2)
                 {
                     result.EntryName = elements[2];
                 }

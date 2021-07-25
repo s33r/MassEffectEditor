@@ -8,7 +8,6 @@ using System.Linq;
 using System.Text;
 
 
-
 namespace Aaron.MassEffectEditor.Coalesced.Me3
 {
     class StringTableBlock : IBlock<Codec>
@@ -20,26 +19,13 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
 
         public List<StringTableEntry> Entries { get; private set; }
 
-        public ushort IndexOf(string entryValue)
-        {
-            for(int index = 0; index < Entries.Count; index++)
-            {
-                if(Entries[index].Value == entryValue)
-                {
-                    return (ushort)index;
-                }
-            }
-
-            throw new KeyNotFoundException($"The entryValue {entryValue} could not be found in the StringTable");
-        }
-
         public void Read(byte[] data, Codec codec)
         {
             BinaryReader input = new(new MemoryStream(data));
 
             uint stringTableLength = input.ReadUInt32();
 
-            List<StringTableEntry> entries = Utility.CreateList<StringTableEntry>((int)input.ReadUInt32()).ToList();
+            List<StringTableEntry> entries = Utility.CreateList<StringTableEntry>((int) input.ReadUInt32()).ToList();
             long seekOrigin = input.BaseStream.Position;
 
             foreach (StringTableEntry entry in entries)
@@ -78,7 +64,6 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
 
         public void Write(BinaryWriter output, Codec codec)
         {
-
             List<StringTableEntry> stringTable = new List<StringTableEntry>();
             StringBuilder dataBuffer = new();
 
@@ -90,7 +75,6 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
                 stringTable.Add(new StringTableEntry(record.Name));
             }
 
-            
 
             stringTable = stringTable
                 .Distinct()
@@ -107,8 +91,8 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
 
             foreach (StringTableEntry entry in stringTable)
             {
-                entry.Offset = (uint)bufferStream.Position - HEADER_LENGTH;
-                buffer.Write((ushort)entry.Value.Length);
+                entry.Offset = (uint) bufferStream.Position - HEADER_LENGTH;
+                buffer.Write((ushort) entry.Value.Length);
                 buffer.Write(Encoding.UTF8.GetBytes(entry.Value));
             }
 
@@ -116,19 +100,19 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
             bufferStream.Position = 4 + ENTRY_COUNT_LENGTH;
 
             foreach (StringTableEntry entry in stringTable)
-            {               
+            {
                 buffer.Write(entry.Checksum);
                 buffer.Write(entry.Offset);
             }
 
             //Finally - Write out the [Header] section
             bufferStream.Position = 0;
-            buffer.Write((uint)bufferStream.Length);
-            buffer.Write((ushort)stringTable.Count);
+            buffer.Write((uint) bufferStream.Length);
+            buffer.Write((ushort) stringTable.Count);
 
 
             byte[] data = bufferStream.ToArray();
-            codec.Header.StringTableLength = (uint)data.Length;
+            codec.Header.StringTableLength = (uint) data.Length;
 
             output.Write(data);
         }
@@ -156,5 +140,17 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
             File.WriteAllText(outputLocation, text);
         }
 
+        public ushort IndexOf(string entryValue)
+        {
+            for (int index = 0; index < Entries.Count; index++)
+            {
+                if (Entries[index].Value == entryValue)
+                {
+                    return (ushort) index;
+                }
+            }
+
+            throw new KeyNotFoundException($"The entryValue {entryValue} could not be found in the StringTable");
+        }
     }
 }

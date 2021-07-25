@@ -86,7 +86,8 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
             }
         }
 
-        public Container ToRecords(StringTableBlock stringTable, HuffmanTreeBlock huffmanTree, BitArray compressedData, int maxValueLength)
+        public Container ToRecords(StringTableBlock stringTable, HuffmanTreeBlock huffmanTree, BitArray compressedData,
+            int maxValueLength)
         {
             List<FileRecord> fileRecords = Index.Table
                 .Select(f => new FileRecord(f.GetString(stringTable)))
@@ -98,8 +99,8 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
 
                 fileRecords[sectionIndex]
                     .SetValues(currentSection.Index.Table
-                    .Select(s => new SectionRecord(s.GetString(stringTable)))
-                    .ToList());                
+                        .Select(s => new SectionRecord(s.GetString(stringTable)))
+                        .ToList());
 
                 for (int entryIndex = 0; entryIndex < currentSection.Entries.Length; entryIndex++)
                 {
@@ -107,8 +108,8 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
 
                     fileRecords[sectionIndex][entryIndex]
                         .SetValues(currentEntry.Index.Table
-                        .Select(e => new EntryRecord(e.GetString(stringTable)))
-                        .ToList());
+                            .Select(e => new EntryRecord(e.GetString(stringTable)))
+                            .ToList());
 
                     for (int itemIndex = 0; itemIndex < currentEntry.Items.Length; itemIndex++)
                     {
@@ -126,19 +127,21 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
             return container;
         }
 
-        public static IndexContainer FromRecords(Container container, StringTableBlock stringTable, Huffman.Encoder encoder, BitArray compressedData)
+        public static IndexContainer FromRecords(Container container, StringTableBlock stringTable,
+            Huffman.Encoder encoder, BitArray compressedData)
         {
             container.Sort((x, y) => SortByIndexComparer(x, y, stringTable));
 
-            IndexContainer indexContainer = new((ushort)container.Files.Count);
+            IndexContainer indexContainer = new((ushort) container.Files.Count);
 
             int bitOffset = 0;
-            uint fileOffset = (ushort)indexContainer.Size();
+            uint fileOffset = (ushort) indexContainer.Size();
 
             for (int sectionIndex = 0; sectionIndex < indexContainer.Sections.Length; sectionIndex++)
-            {                 
+            {
                 FileRecord currentFileRecord = container.Files[sectionIndex];
-                Section currentSection = new((ushort)currentFileRecord.Count, indexContainer.Index.Table[sectionIndex]);
+                Section currentSection =
+                    new((ushort) currentFileRecord.Count, indexContainer.Index.Table[sectionIndex]);
                 indexContainer.Sections[sectionIndex] = currentSection;
 
                 currentSection.Parent.Offset = fileOffset;
@@ -149,7 +152,8 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
                 for (int entryIndex = 0; entryIndex < currentSection.Entries.Length; entryIndex++)
                 {
                     SectionRecord currentSectionRecord = container.Files[sectionIndex][entryIndex];
-                    Entry currentEntry = new((ushort)currentSectionRecord.Count, currentSection.Index.Table[entryIndex]);
+                    Entry currentEntry =
+                        new((ushort) currentSectionRecord.Count, currentSection.Index.Table[entryIndex]);
                     currentSection.Entries[entryIndex] = currentEntry;
 
                     currentEntry.Parent.Offset = sectionOffset;
@@ -160,7 +164,8 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
                     for (int itemIndex = 0; itemIndex < currentEntry.Items.Length; itemIndex++)
                     {
                         EntryRecord currentEntryRecord = container.Files[sectionIndex][entryIndex][itemIndex];
-                        Item currentItem = new((ushort)currentSectionRecord[itemIndex].Count, currentEntry.Index.Table[itemIndex]);
+                        Item currentItem =
+                            new((ushort) currentSectionRecord[itemIndex].Count, currentEntry.Index.Table[itemIndex]);
                         currentEntry.Items[itemIndex] = currentItem;
 
                         currentItem.Parent.Offset = entryOffset;
@@ -169,7 +174,8 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
                         for (int valueIndex = 0; valueIndex < currentItem.Count; valueIndex++)
                         {
                             string currentValue = currentEntryRecord[valueIndex];
-                            bitOffset = currentItem.Encode(currentValue, valueIndex, bitOffset, encoder, compressedData);
+                            bitOffset = currentItem.Encode(currentValue, valueIndex, bitOffset, encoder,
+                                compressedData);
                         }
 
                         entryOffset += currentItem.Size();
@@ -206,12 +212,12 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
             foreach (Section section in Sections)
             {
                 output.AppendLine($"Section ({section.Index.Count} entries / {section.Size()} bytes)");
-                foreach(Entry entry in section.Entries)
+                foreach (Entry entry in section.Entries)
                 {
                     output.AppendLine($"    Entry ({entry.Index.Count} entries / {entry.Size()} bytes)");
                     foreach (Item item in entry.Items)
                     {
-                        output.AppendLine($"        Item ({item.Count} entries / {item.Size()} bytes)");                        
+                        output.AppendLine($"        Item ({item.Count} entries / {item.Size()} bytes)");
                         foreach (int value in item.Values)
                         {
                             //output.AppendLine(value.ToString());
@@ -226,7 +232,6 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
 
         public void Dump(string rootName)
         {
-
             string fileName = $"{rootName}.index.txt";
             string outputLocation = Path.Join(Configuration.Instance.WorkingLocation, fileName);
 
@@ -235,6 +240,5 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
 
             File.WriteAllText(outputLocation, text);
         }
-
     }
 }

@@ -19,12 +19,12 @@ namespace Aaron.MassEffectEditor.Coalesced
 
         public static Container Load(Games game, byte[] data)
         {
-            if(!_codecs.ContainsKey(game))
+            if (!_codecs.ContainsKey(game))
             {
                 throw new GameNotSupportedException(game);
             }
 
-            Codec codec = (Codec)_codecs[game];
+            Codec codec = (Codec) _codecs[game];
             Container container = codec.Decode(data);
 
             return container;
@@ -33,7 +33,7 @@ namespace Aaron.MassEffectEditor.Coalesced
         public static Container Load(Games game, string fileLocation)
         {
             byte[] data = File.ReadAllBytes(fileLocation);
-            
+
             return Load(game, data);
         }
 
@@ -44,7 +44,7 @@ namespace Aaron.MassEffectEditor.Coalesced
                 throw new GameNotSupportedException(game);
             }
 
-            Codec codec = (Codec)_codecs[game];
+            Codec codec = (Codec) _codecs[game];
             byte[] data = codec.Encode(container);
 
             return data;
@@ -59,7 +59,6 @@ namespace Aaron.MassEffectEditor.Coalesced
 
         public static void Compare(byte[] oldData, byte[] newData, byte[] gibData)
         {
-
             //bool byteMatch = CompareBytes(oldData, newData);
 
             Codec oCodec = new("old");
@@ -102,7 +101,6 @@ namespace Aaron.MassEffectEditor.Coalesced
         }
 
 
-
         private static void DumpStringTable(Codec codec, StreamWriter output)
         {
             foreach (var entry in codec.StringTable.Entries)
@@ -110,9 +108,5 @@ namespace Aaron.MassEffectEditor.Coalesced
                 output.WriteLine("[{0,8}] ({1,10}) {2}", entry.Offset, entry.Checksum, entry.Value);
             }
         }
-
-        
-
-        
     }
 }

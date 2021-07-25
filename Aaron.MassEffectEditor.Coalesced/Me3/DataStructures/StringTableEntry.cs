@@ -9,22 +9,7 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
         public uint Offset { get; set; }
         public uint Checksum { get; set; }
 
-        public bool Validate()
-        {
-            uint crc32 = Crc32.Compute(Value);
-
-            return crc32 == Checksum;
-        }
-
-        public override string ToString()
-        {
-            return $"[Offset={Offset}][Checksum={Checksum:X}] {Value}";
-        }
-
-        public StringTableEntry()
-        {
-
-        }
+        public StringTableEntry() { }
 
         public StringTableEntry(string value, uint offset, uint checksum)
         {
@@ -56,6 +41,18 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
             return other.Checksum == Checksum;
         }
 
+        public bool Validate()
+        {
+            uint crc32 = Crc32.Compute(Value);
+
+            return crc32 == Checksum;
+        }
+
+        public override string ToString()
+        {
+            return $"[Offset={Offset}][Checksum={Checksum:X}] {Value}";
+        }
+
         public override bool Equals(object obj)
         {
             if ((obj == null) || GetType() != obj.GetType())
@@ -63,12 +60,12 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
                 return false;
             }
 
-            return Equals((StringTableEntry)obj);
+            return Equals((StringTableEntry) obj);
         }
 
         public override int GetHashCode()
         {
-            return (int)Crc32.Compute(Value);
+            return (int) Crc32.Compute(Value);
         }
     }
 }

@@ -1,6 +1,4 @@
 ﻿namespace Aaron.MassEffectEditor.Core.Extensions
 {
-    class List
-    {
-    }
+    class List { }
 }

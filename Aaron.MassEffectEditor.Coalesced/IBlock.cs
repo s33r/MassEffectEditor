@@ -2,7 +2,7 @@
 
 namespace Aaron.MassEffectEditor.Coalesced
 {
-    internal interface IBlock<in T> where T: ICodec
+    internal interface IBlock<in T> where T : ICodec
     {
         void Read(byte[] data, T codec);
         void Write(BinaryWriter output, T codec);

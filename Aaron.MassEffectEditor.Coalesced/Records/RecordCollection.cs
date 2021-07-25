@@ -10,8 +10,11 @@ namespace Aaron.MassEffectEditor.Coalesced.Records
         private List<FileRecord> files;
 
 
-
-        public IRecord this[string key] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public IRecord this[string key]
+        {
+            get => throw new NotImplementedException();
+            set => throw new NotImplementedException();
+        }
 
         public ICollection<string> Keys => throw new NotImplementedException();
 

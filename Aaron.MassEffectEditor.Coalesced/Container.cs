@@ -13,10 +13,13 @@ namespace Aaron.MassEffectEditor.Coalesced
     {
         public List<FileRecord> Files { get; }
 
+        public int RecordCount => GetEntries().Count();
+
         public Container()
         {
             Files = new List<FileRecord>();
         }
+
         public Container(int count)
         {
             Files = Utility.CreateList<FileRecord>(count).ToList();
@@ -26,25 +29,6 @@ namespace Aaron.MassEffectEditor.Coalesced
         {
             Files = new List<FileRecord>(records);
         }
-
-        public int RecordCount => GetEntries().Count();
-
-
-        public void Sort(Comparison<IRecord> comparison)
-        {
-            Files.Sort(comparison);
-
-            foreach (FileRecord fileRecord in Files)
-            {
-                fileRecord.Sort(comparison);
-
-                foreach (SectionRecord sectionRecord in fileRecord)
-                {
-                    sectionRecord.Sort(comparison);
-                }
-            }
-        }
-
 
 
         public IEnumerator<IRecord> GetEnumerator()
@@ -65,6 +49,27 @@ namespace Aaron.MassEffectEditor.Coalesced
             }
         }
 
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+
+        public void Sort(Comparison<IRecord> comparison)
+        {
+            Files.Sort(comparison);
+
+            foreach (FileRecord fileRecord in Files)
+            {
+                fileRecord.Sort(comparison);
+
+                foreach (SectionRecord sectionRecord in fileRecord)
+                {
+                    sectionRecord.Sort(comparison);
+                }
+            }
+        }
+
         public IEnumerable<FileRecord> GetFiles()
         {
             foreach (FileRecord fileRecord in Files)
@@ -76,7 +81,7 @@ namespace Aaron.MassEffectEditor.Coalesced
         public IEnumerable<SectionRecord> GetSections()
         {
             foreach (FileRecord fileRecord in Files)
-            {             
+            {
                 foreach (SectionRecord sectionRecord in fileRecord)
                 {
                     yield return sectionRecord;
@@ -106,7 +111,7 @@ namespace Aaron.MassEffectEditor.Coalesced
                 {
                     foreach (EntryRecord entryRecord in sectionRecord)
                     {
-                        foreach(string item in entryRecord)
+                        foreach (string item in entryRecord)
                         {
                             yield return item;
                         }
@@ -131,7 +136,7 @@ namespace Aaron.MassEffectEditor.Coalesced
             {
                 dataBuffer.Append(item + '\0');
 
-                if(item.Length > longest)
+                if (item.Length > longest)
                 {
                     longest = item.Length;
                 }
@@ -139,11 +144,6 @@ namespace Aaron.MassEffectEditor.Coalesced
 
             longestLength = longest;
             return dataBuffer.ToString();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
 
         public string DumpRecords()

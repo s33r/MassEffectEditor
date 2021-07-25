@@ -1,6 +1,4 @@
 ﻿namespace Aaron.MassEffectEditor.Coalesced
 {
-    class Annotation
-    {
-    }
+    class Annotation { }
 }

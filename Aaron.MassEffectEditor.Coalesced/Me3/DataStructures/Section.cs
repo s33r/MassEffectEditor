@@ -4,11 +4,10 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
 {
     class Section
     {
+        public Entry[] Entries;
 
         public StandardIndexEntry Parent { get; set; }
         public StandardIndex Index { get; set; }
-
-        public Entry[] Entries;
 
 
         public Section() { }
@@ -17,7 +16,7 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
         {
             Parent = parent;
 
-            Index = new(count);
+            Index = new StandardIndex(count);
             Entries = new Entry[count];
 
             for (int i = 0; i < count; i++)
@@ -39,7 +38,7 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
         public void Read(BinaryReader reader, uint origin, StandardIndexEntry parent)
         {
             Parent = parent;
-            
+
             Index = new StandardIndex();
             Index.Read(reader);
 

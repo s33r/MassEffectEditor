@@ -8,6 +8,5 @@ namespace Aaron.MassEffectEditor.Coalesced
         byte[] Encode(Container value);
 
         Container Decode(byte[] value);
-
     }
 }

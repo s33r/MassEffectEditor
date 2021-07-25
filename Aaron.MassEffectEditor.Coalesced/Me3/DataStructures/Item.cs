@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using Huffman = Aaron.MassEffectEditor.Core.Compression.Huffman;
+
 namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
 {
     class Item
     {
-        public StandardIndexEntry Parent;
         public ushort Count;
+        public StandardIndexEntry Parent;
         public int[] Values;
 
         public Item() { }
@@ -26,7 +27,7 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
 
         public static ushort Size(int count)
         {
-            return (ushort)(2 + (4 * count));
+            return (ushort) (2 + (4 * count));
         }
 
         public string Decode(int index, HuffmanTreeBlock huffmanTree, BitArray compressedData, int maxValueLength)
@@ -41,7 +42,8 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
             else if (type == 2)
             {
                 offset &= 0x1FFFFFFF;
-                string text = Huffman.Decoder.Decode(huffmanTree.HuffmanTuples.ToArray(), compressedData, offset, maxValueLength);
+                string text = Huffman.Decoder.Decode(huffmanTree.HuffmanTuples.ToArray(), compressedData, offset,
+                    maxValueLength);
 
                 return text;
             }
@@ -65,7 +67,7 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
         {
             int value;
             int newBitOffset = bitOffset;
-            
+
 
             if (item == null)
             {
@@ -80,7 +82,6 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
             Values[index] = value;
 
             return newBitOffset;
-
         }
 
         public void Read(BinaryReader reader, StandardIndexEntry parent)
@@ -99,7 +100,7 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
         {
             writer.Write(Count);
 
-            foreach(int value in Values)
+            foreach (int value in Values)
             {
                 writer.Write(value);
             }

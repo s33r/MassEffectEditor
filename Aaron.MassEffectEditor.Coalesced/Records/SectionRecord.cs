@@ -6,28 +6,10 @@ using System.Linq;
 
 namespace Aaron.MassEffectEditor.Coalesced.Records
 {
-    public class SectionRecord 
+    public class SectionRecord
         : IRecord, IEquatable<IRecord>, IReadOnlyList<EntryRecord>
     {
-        public string Name { get; set; }
-
-        public IRecord Parent { get; internal set; }
-
-        public int Count => _values.Count;
-
-        public string Path => Parent.Name + '/' + Name;
-
         private List<EntryRecord> _values;
-
-        public EntryRecord this[int index]
-        {
-            get => _values[index];
-            set
-            {
-                value.Parent = this;
-                _values[index] = value;
-            }
-        }
 
         public SectionRecord(List<EntryRecord> entries, string name)
         {
@@ -42,7 +24,7 @@ namespace Aaron.MassEffectEditor.Coalesced.Records
         }
 
         public SectionRecord(List<EntryRecord> sections)
-          : this(sections, null) { }
+            : this(sections, null) { }
 
         public SectionRecord(int count)
             : this(Utility.CreateList<EntryRecord>(count).ToList()) { }
@@ -52,6 +34,44 @@ namespace Aaron.MassEffectEditor.Coalesced.Records
 
         public SectionRecord(string name)
             : this(new List<EntryRecord>(), name) { }
+
+        public bool Equals(IRecord other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            return other.Name == Name;
+        }
+
+        public int Count => _values.Count;
+
+        public EntryRecord this[int index]
+        {
+            get => _values[index];
+            set
+            {
+                value.Parent = this;
+                _values[index] = value;
+            }
+        }
+
+        IEnumerator<EntryRecord> IEnumerable<EntryRecord>.GetEnumerator()
+        {
+            return _values.GetEnumerator();
+        }
+
+        public string Name { get; set; }
+
+        public IRecord Parent { get; internal set; }
+
+        public string Path => Parent.Name + '/' + Name;
+
+        public IEnumerator GetEnumerator()
+        {
+            return _values.GetEnumerator();
+        }
 
 
         public void SetValues(IEnumerable<EntryRecord> entries)
@@ -70,16 +90,6 @@ namespace Aaron.MassEffectEditor.Coalesced.Records
             return $"SectionRecord [{_values.Count} Values] {Name}";
         }
 
-        public bool Equals(IRecord other)
-        {
-            if (other == null)
-            {
-                return false;
-            }
-
-            return other.Name == Name;
-        }
-
         public override bool Equals(object other)
         {
             if (other == null || GetType() != other.GetType())
@@ -87,21 +97,12 @@ namespace Aaron.MassEffectEditor.Coalesced.Records
                 return false;
             }
 
-            return Equals((IRecord)other);
+            return Equals((IRecord) other);
         }
+
         public override int GetHashCode()
         {
             return Name.GetHashCode();
-        }
-
-        public IEnumerator GetEnumerator()
-        {
-            return _values.GetEnumerator();
-        }
-
-        IEnumerator<EntryRecord> IEnumerable<EntryRecord>.GetEnumerator()
-        {
-            return _values.GetEnumerator();
         }
 
         public void Sort(Comparison<IRecord> comparer)

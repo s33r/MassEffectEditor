@@ -4,10 +4,9 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
 {
     internal class Entry
     {
+        public Item[] Items;
         public StandardIndexEntry Parent { get; set; }
         public StandardIndex Index { get; set; }
-
-        public Item[] Items;
 
         public Entry() { }
 
@@ -49,7 +48,7 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3.DataStructures
 
                 Items[i] = new Item();
                 Items[i].Read(reader, Index[i]);
-            }            
+            }
         }
 
         public void Write(BinaryWriter writer)

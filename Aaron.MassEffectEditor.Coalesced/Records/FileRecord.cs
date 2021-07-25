@@ -9,27 +9,11 @@ namespace Aaron.MassEffectEditor.Coalesced.Records
     public class FileRecord
         : IRecord, IEquatable<IRecord>, IList<SectionRecord>
     {
-        public string Name { get; set; }
-        public string FriendlyName => System.IO.Path.GetFileName(Name.Replace("\\", "/")); //Windows can use either slash, but all others need unix style.
-        public string Path => FriendlyName;
-
-        public IRecord Parent => null;
-
-        public int Count => _values.Count;
-
-        public bool IsReadOnly => false;
-
         private List<SectionRecord> _values;
 
-        public SectionRecord this[int index]
-        {
-            get => _values[index];
-            set
-            {
-                value.Parent = this;
-                _values[index] = value;
-            }
-        }
+        public string FriendlyName =>
+            System.IO.Path.GetFileName(Name.Replace("\\",
+                "/")); //Windows can use either slash, but all others need unix style.
 
         public FileRecord(List<SectionRecord> sections, string name)
         {
@@ -55,26 +39,9 @@ namespace Aaron.MassEffectEditor.Coalesced.Records
         public FileRecord(string name)
             : this(new List<SectionRecord>(), name) { }
 
-
-        public void SetValues(IEnumerable<SectionRecord> sections)
-        {
-            _values = new List<SectionRecord>();
-
-            foreach (SectionRecord section in sections)
-            {
-                section.Parent = this;
-                _values.Add(section);
-            }
-        }
-
-        public override string ToString()
-        {
-            return $"FileRecord [{_values.Count} Values] {Name}";
-        }
-
         public bool Equals(IRecord other)
         {
-            if(other == null)
+            if (other == null)
             {
                 return false;
             }
@@ -82,23 +49,18 @@ namespace Aaron.MassEffectEditor.Coalesced.Records
             return other.Name == Name;
         }
 
-        public override bool Equals(object other)
+        public int Count => _values.Count;
+
+        public bool IsReadOnly => false;
+
+        public SectionRecord this[int index]
         {
-            if (other == null || GetType() != other.GetType())
+            get => _values[index];
+            set
             {
-                return false;
+                value.Parent = this;
+                _values[index] = value;
             }
-
-            return Equals((IRecord)other);
-        }
-        public override int GetHashCode()
-        {
-            return Name.GetHashCode();
-        }
-
-        public IEnumerator GetEnumerator()
-        {
-            return _values.GetEnumerator();
         }
 
         IEnumerator<SectionRecord> IEnumerable<SectionRecord>.GetEnumerator()
@@ -147,13 +109,54 @@ namespace Aaron.MassEffectEditor.Coalesced.Records
         public void CopyTo(SectionRecord[] array, int arrayIndex)
         {
             _values.CopyTo(array, arrayIndex);
-            
         }
 
         public bool Remove(SectionRecord item)
         {
             item.Parent = null;
             return _values.Remove(item);
+        }
+
+        public string Name { get; set; }
+        public string Path => FriendlyName;
+
+        public IRecord Parent => null;
+
+        public IEnumerator GetEnumerator()
+        {
+            return _values.GetEnumerator();
+        }
+
+
+        public void SetValues(IEnumerable<SectionRecord> sections)
+        {
+            _values = new List<SectionRecord>();
+
+            foreach (SectionRecord section in sections)
+            {
+                section.Parent = this;
+                _values.Add(section);
+            }
+        }
+
+        public override string ToString()
+        {
+            return $"FileRecord [{_values.Count} Values] {Name}";
+        }
+
+        public override bool Equals(object other)
+        {
+            if (other == null || GetType() != other.GetType())
+            {
+                return false;
+            }
+
+            return Equals((IRecord) other);
+        }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode();
         }
 
         public void Sort(Comparison<IRecord> comparer)

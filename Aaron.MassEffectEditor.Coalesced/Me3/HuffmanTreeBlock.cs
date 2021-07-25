@@ -9,7 +9,6 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
 {
     class HuffmanTreeBlock : IBlock<Codec>
     {
-
         public const int HUFFMAN_TUPLE_SIZE = 8;
         public List<Pair> HuffmanTuples { get; private set; }
 
@@ -27,8 +26,8 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
             {
                 Pair pair = new()
                 {
-                    Left = input.ReadInt32(), 
-                    Right = input.ReadInt32()
+                    Left = input.ReadInt32(),
+                    Right = input.ReadInt32(),
                 };
 
                 pairs.Add(pair);
@@ -37,10 +36,7 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
             HuffmanTuples = pairs;
         }
 
-        public void Validate(Codec codec)
-        {
-
-        }
+        public void Validate(Codec codec) { }
 
         public void Write(BinaryWriter output, Codec codec)
         {
@@ -51,11 +47,11 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
             Encoder.Build(data);
 
             HuffmanTuples = Encoder.GetPairs().ToList();
-            codec.Header.HuffmanLength = (uint)(HUFFMAN_TUPLE_SIZE * HuffmanTuples.Count) + 2;
+            codec.Header.HuffmanLength = (uint) (HUFFMAN_TUPLE_SIZE * HuffmanTuples.Count) + 2;
 
-            output.Write((ushort)HuffmanTuples.Count);
+            output.Write((ushort) HuffmanTuples.Count);
 
-            foreach(Pair pair in HuffmanTuples)
+            foreach (Pair pair in HuffmanTuples)
             {
                 output.Write(pair.Left);
                 output.Write(pair.Right);
@@ -68,7 +64,7 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
 
             output.AppendLine($"Count = {HuffmanTuples.Count}");
 
-            foreach(var tuple in HuffmanTuples)
+            foreach (var tuple in HuffmanTuples)
             {
                 output.AppendLine($"({tuple.Left,8}, {tuple.Right,8})");
             }

@@ -6,9 +6,15 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
 {
     internal class Codec : ICodec
     {
-        public Games Game { get; } = Games.Me3;
-
         public string Name { get; set; }
+
+        public HeaderBlock Header { get; } = new();
+        public StringTableBlock StringTable { get; } = new();
+        public HuffmanTreeBlock HuffmanTree { get; } = new();
+        public DataBlock Data { get; } = new();
+        public BitArray CompressedData { get; set; }
+
+        public Container Container { get; set; }
 
         public Codec(string name)
         {
@@ -20,26 +26,21 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
             Name = "Codec";
         }
 
-        public HeaderBlock Header { get; } = new();
-        public StringTableBlock StringTable { get; } = new();
-        public HuffmanTreeBlock HuffmanTree { get; } = new();
-        public DataBlock Data { get; } = new();
-        public BitArray CompressedData { get; set; }
-
-        public Container Container { get; set; }
+        public Games Game { get; } = Games.Me3;
 
         public Container Decode(byte[] value)
         {
             BinaryReader input = new(new MemoryStream(value));
 
             Header.Read(input, this);
-            StringTable.Read(input.ReadBytes((int)Header.StringTableLength), this);
-            HuffmanTree.Read(input.ReadBytes((int)Header.HuffmanLength), this);
+            StringTable.Read(input.ReadBytes((int) Header.StringTableLength), this);
+            HuffmanTree.Read(input.ReadBytes((int) Header.HuffmanLength), this);
 
-            byte[] indexData = input.ReadBytes((int)Header.IndexLength);
+            byte[] indexData = input.ReadBytes((int) Header.IndexLength);
 
-            int compressedDataLength = input.ReadInt32(); //TODO: This should really be in the DataBlock, its just easier to do it here because if the interface
-            CompressedData = new BitArray(input.ReadBytes((int)Header.DataLength));
+            int compressedDataLength =
+                input.ReadInt32(); //TODO: This should really be in the DataBlock, its just easier to do it here because if the interface
+            CompressedData = new BitArray(input.ReadBytes((int) Header.DataLength));
 
             Data.Read(indexData, this);
 
@@ -59,7 +60,7 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
             StringTable.Write(output, this);
             HuffmanTree.Write(output, this);
             Data.Write(output, this);
-            
+
             outputStream.Position = 0;
             Header.Write(output, this);
 
@@ -73,9 +74,6 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
             StringTable.Dump(Name);
             HuffmanTree.Dump(Name);
             Data.Dump(Name);
-
         }
-
-        
     }
 }

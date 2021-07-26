@@ -3,7 +3,7 @@ $messageDate=Get-Date -Format "yyyy-MM-dd HHmm"
 git config --global user.name 'Aaron Willows'
 git config --global user.email 'aaron@aaronwillows.com'
 
-rm -rf ./docs
+Remove-Item ./docs -Recurse -Force
 cp -r ./Aaron.MassEffectEditor.WebUI/bin/Debug/net5.0/publish/wwwroot ./docs
 
 git fetch

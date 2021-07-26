@@ -44,6 +44,14 @@ namespace Aaron.MassEffectEditor.WebUI.Services
             await fileStream.CopyToAsync(memoryStream);
 
             byte[] data = memoryStream.ToArray();
+
+            return LoadFile(data);
+        }
+
+
+        public massEffect.Container LoadFile(byte[] data)
+        {
+
             massEffect.Container container = massEffect.CoalescedFile.Load(Core.Games.Me3, data);
 
             Console.WriteLine(container.Files[0].FriendlyName);
@@ -57,6 +65,7 @@ namespace Aaron.MassEffectEditor.WebUI.Services
 
             return CurrentContainer;
         }
+
 
         public void UnloadFile()
         {

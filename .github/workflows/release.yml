@@ -17,4 +17,4 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet publish -p:PublishProfile=FolderProfile

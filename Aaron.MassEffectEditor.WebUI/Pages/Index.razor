@@ -1,47 +1,47 @@
 ﻿@page "/"
-@inject DialogService _dialogService
-
 
 <div>
-    <div class="row">
-        <RadzenMenu Click="OnClick">
-            <RadzenMenuItem Value="MenuUpload" Text="Upload File" Icon="file_upload"></RadzenMenuItem>
-            <RadzenMenuItem Value="MenuDownload" Text="Download File" Icon="file_download"></RadzenMenuItem>
-            <RadzenMenuItem Value="MenuAbout" Text="About" Icon="info"></RadzenMenuItem>
-        </RadzenMenu>
+    
+        <nav class="navbar navbar-dark bg-dark nav-fill w-100">
+            <form class="form-inline">
+                <button type="button" class="btn btn-primary mr-2" @onclick="OnUploadClick"><i class="bi bi-upload"></i> Upload</button>
+                <button type="button" class="btn btn-primary mr-2" @onclick="OnDownloadClick"><i class="bi bi-download"></i> Download</button>
+                <button type="button" class="btn btn-primary mr-2" @onclick="OnAboutClick"><i class="bi bi-info-circle"></i> About</button>
+            </form>
+        </nav>
+
+    <div class="row py-3">
+        <div class="col-md-auto">
+            <ContainerTree @ref="FileTree"></ContainerTree>
+        </div>
+        
+        <div class="col">
+            <FileRecordView></FileRecordView>
+            <p>Select a file to edit it</p>
+        </div>
     </div>
 
-    <div class="row">
-        <ContainerTree @ref="FileTree"></ContainerTree>
-    </div>
 
+    <LoadModal></LoadModal>
 </div>
 
 
 @code {
-
-    public readonly string MenuUpload = "upload";
-    public readonly string MenuDownload = "download";
-    public readonly string MenuAbout = "about";
-
     protected ContainerTree FileTree;
 
-    private async Task OnClick(MenuItemEventArgs e)
+    private async Task OnUploadClick()
     {
-        string value = e.Value.ToString();
-
-        if (value == MenuAbout)
-        {
-            var result = await _dialogService.OpenAsync<AboutModal>("About");
-        }
-        else if (value == MenuDownload)
-        {
-            Console.WriteLine("File Download");
-        }
-        else if (value == MenuUpload)
-        {
-            var result = await _dialogService.OpenAsync<UploadModal>("Upload File");
-            FileTree.StateHasChanged();
-        }
+        Console.WriteLine("File Upload");
     }
+
+    private async Task OnDownloadClick()
+    {
+        Console.WriteLine("File Download");
+    }
+
+    private async Task OnAboutClick()
+    {
+        Console.WriteLine("About");
+    }
+
 }

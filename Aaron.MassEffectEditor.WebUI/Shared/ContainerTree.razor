@@ -2,45 +2,36 @@
 @using Aaron.MassEffectEditor.Coalesced.Records;
 @inject MassEffectData _massEffectDataService
 
-
-
-<RadzenPanelMenu Click="OnClick">
+<div class="list-group">
     @if (_massEffectDataService.CurrentContainer != null)
     {
         @foreach (FileRecord fileRecord in _massEffectDataService.CurrentContainer.Files)
         {
-            <RadzenPanelMenuItem Text="@fileRecord.FriendlyName" Value="fileRecord.Name" Icon="description"></RadzenPanelMenuItem>
+            <button type="button" class="list-group-item d-flex justify-content-between align-items-center list-group-item-action" @onclick="() => OnItemClick(fileRecord)">
+                <span><i class="bi bi-card-list"></i> @fileRecord.FriendlyName</span>
+                <span class="badge badge-primary badge-pill">@fileRecord.Count</span>
+            </button>
         }
     }
-</RadzenPanelMenu>
+</div>
 
 
 @code {
-    string _testValue = "beans";
 
-    void OnClick(MenuItemEventArgs e)
+    private void OnItemClick(FileRecord fileRecord)
     {
-        Console.WriteLine("{0} / {1}", e.Text, e.Value);
+        Console.WriteLine(fileRecord.Name);
+        _massEffectDataService.CurrentFileRecord = fileRecord;
     }
 
-    void OnExpand(TreeExpandEventArgs args)
+    protected override void OnInitialized()
     {
-        if (args.Value is string text)
-        {
-            Console.WriteLine($"Text: {text}");
-        }
-        else
-        {
-            Console.WriteLine(args.Value);
-        }
+        _massEffectDataService.OnCurrentContainerChanged += ForceUpdate;
     }
 
-    void OnChange(TreeEventArgs args)
-    {
-        Console.WriteLine($"Item Text: {args.Text}");
-    }
 
-    public new void StateHasChanged()
+
+    private void ForceUpdate(Container container)
     {
         base.StateHasChanged();
     }

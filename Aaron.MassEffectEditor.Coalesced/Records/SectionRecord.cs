@@ -7,7 +7,7 @@ using System.Linq;
 namespace Aaron.MassEffectEditor.Coalesced.Records
 {
     public class SectionRecord
-        : IRecord, IEquatable<IRecord>, IReadOnlyList<EntryRecord>
+        : IRecord, IEquatable<IRecord>, IList<EntryRecord>
     {
         private List<EntryRecord> _values;
 
@@ -45,7 +45,57 @@ namespace Aaron.MassEffectEditor.Coalesced.Records
             return other.Name == Name;
         }
 
+        public void Add(EntryRecord item)
+        {
+            item.Parent = this;
+            _values.Add(item);
+        }
+
+        public void Clear()
+        {
+            foreach (EntryRecord item in _values)
+            {
+                item.Parent = null;
+            }
+
+            _values.Clear();
+        }
+
+        public bool Contains(EntryRecord item)
+        {
+            return _values.Contains(item);
+        }
+
+        public void CopyTo(EntryRecord[] array, int arrayIndex)
+        {
+            _values.CopyTo(array, arrayIndex);
+        }
+
+        public bool Remove(EntryRecord item)
+        {
+            item.Parent = null;
+            return _values.Remove(item);
+        }
+
         public int Count => _values.Count;
+        public bool IsReadOnly => false;
+
+        public int IndexOf(EntryRecord item)
+        {
+            return _values.IndexOf(item);
+        }
+
+        public void Insert(int index, EntryRecord item)
+        {
+            item.Parent = this;
+            _values.Insert(index, item);
+        }
+
+        public void RemoveAt(int index)
+        {
+            _values[index].Parent = null;
+            _values.RemoveAt(index);
+        }
 
         public EntryRecord this[int index]
         {

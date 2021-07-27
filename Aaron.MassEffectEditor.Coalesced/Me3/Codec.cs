@@ -22,11 +22,9 @@ namespace Aaron.MassEffectEditor.Coalesced.Me3
         }
 
         public Codec()
-        {
-            Name = "Codec";
-        }
+            :this("Mass Effect 3 Codec") { }
 
-        public Games Game { get; } = Games.Me3;
+        public Games Game => Games.Me3;
 
         public Container Decode(byte[] value)
         {

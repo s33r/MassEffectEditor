@@ -127,7 +127,6 @@ namespace Aaron.MassEffectEditor.Coalesced.Records
             return _values.GetEnumerator();
         }
 
-
         public void SetValues(IEnumerable<SectionRecord> sections)
         {
             _values = new List<SectionRecord>();

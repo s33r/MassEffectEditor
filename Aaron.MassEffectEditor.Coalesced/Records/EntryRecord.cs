@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Aaron.MassEffectEditor.Coalesced.Records
 {
     public class EntryRecord
-        : IRecord, IEquatable<IRecord>, IEnumerable<string>, IReadOnlyList<string>
+        : IRecord, IEquatable<IRecord>, IEnumerable<string>, IList<string>
     {
         private List<string> _values;
 
@@ -38,7 +38,48 @@ namespace Aaron.MassEffectEditor.Coalesced.Records
             return other.Name == Name;
         }
 
+        public void Add(string item)
+        {
+            _values.Add(item);
+        }
+
+        public void Clear()
+        {
+            _values.Clear();
+        }
+
+        public bool Contains(string item)
+        {
+            return _values.Contains(item);
+        }
+
+        public void CopyTo(string[] array, int arrayIndex)
+        {
+            _values.CopyTo(array, arrayIndex);
+        }
+
+        public bool Remove(string item)
+        {
+            return _values.Remove(item);
+        }
+
         public int Count => _values.Count;
+        public bool IsReadOnly => false;
+
+        public int IndexOf(string item)
+        {
+            return _values.IndexOf(item);
+        }
+
+        public void Insert(int index, string item)
+        {
+            _values.Insert(index, item);
+        }
+
+        public void RemoveAt(int index)
+        {
+            _values.RemoveAt(index);
+        }
 
         public string this[int index]
         {

@@ -7,27 +7,30 @@ namespace MassEffectEditor
     class Program
     {
         private static string _testInputLocation;
-        private static string _gibbedLocation;
+        private static readonly Games _game = Games.Me1;
 
         static void Main(string[] args)
         {
+            
+
             Configuration.Instance.Initialize();
-            _testInputLocation = Path.Join(Configuration.Instance.WorkingLocation, Path.GetFileName(Configuration.Instance.Game[Games.Me3].CoalescedConfigurationLocation));
-            _gibbedLocation = Path.Join(Configuration.Instance.WorkingLocation, "Coalesced.bin.gib");
+            _testInputLocation = Path.Join(Configuration.Instance.WorkingLocation, 
+                Path.GetFileName(Configuration.Instance.Game[_game].CoalescedConfigurationLocation));
+
 
             BackupCoalesced();
 
             string inputLocation = _testInputLocation;
 
-            Container container = CoalescedFile.Load(Games.Me3, inputLocation);
+            Container container = CoalescedFile.Load(_game, inputLocation);
             string name = container.Files[0].FriendlyName;
             
-            CoalescedFile.Save(Games.Me3, container, inputLocation);
+            CoalescedFile.Save(_game, container, inputLocation);
 
 
             Compare();
 
-            Container testContainer = CoalescedFile.Load(Games.Me3, inputLocation);
+            Container testContainer = CoalescedFile.Load(_game, inputLocation);
 
         }
 
@@ -35,7 +38,7 @@ namespace MassEffectEditor
 
         static void BackupCoalesced()
         {            
-            string sourceLocation = Configuration.Instance.Game[Games.Me3].CoalescedConfigurationLocation;
+            string sourceLocation = Configuration.Instance.Game[_game].CoalescedConfigurationLocation;
             string destinationLocation = _testInputLocation;
 
             File.Delete(destinationLocation);
@@ -47,18 +50,17 @@ namespace MassEffectEditor
         static void RestoreCoalesced()
         {
             string sourceLocation = _testInputLocation;
-            string destinationLocation = Configuration.Instance.Game[Games.Me3].CoalescedConfigurationLocation;
+            string destinationLocation = Configuration.Instance.Game[_game].CoalescedConfigurationLocation;
 
             File.Copy(sourceLocation, destinationLocation);
         }
 
         static void Compare()
         {
-            byte[] original = File.ReadAllBytes(Configuration.Instance.Game[Games.Me3].CoalescedConfigurationLocation);
+            byte[] original = File.ReadAllBytes(Configuration.Instance.Game[_game].CoalescedConfigurationLocation);
             byte[] mine = File.ReadAllBytes(_testInputLocation);
-            byte[] gibbed = File.ReadAllBytes(_gibbedLocation);
 
-            CoalescedFile.Compare(original, mine, gibbed);
+            CoalescedFile.Compare(_game, original, mine );
         }
   
     }

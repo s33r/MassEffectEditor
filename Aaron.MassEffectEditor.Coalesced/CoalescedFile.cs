@@ -1,5 +1,4 @@
-﻿using Aaron.MassEffectEditor.Coalesced.Me3;
-using Aaron.MassEffectEditor.Core;
+﻿using Aaron.MassEffectEditor.Core;
 using Aaron.MassEffectEditor.Core.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -9,73 +8,90 @@ namespace Aaron.MassEffectEditor.Coalesced
 {
     public static class CoalescedFile
     {
-        private static readonly Dictionary<Games, ICodec> _codecs = new();
+        private delegate ICodec CodecFactory(string name);
+        private static readonly Dictionary<Games, CodecFactory> _codecs = new();
 
         static CoalescedFile()
         {
-            _codecs.Add(Games.Me3, new Codec());
+            _codecs.Add(Games.Me1, (name) => new Me1.Codec(name));
+            _codecs.Add(Games.Me2, (name) => new Me1.Codec(name)); // Mass Effect 2 uses the same format as ME1
+            _codecs.Add(Games.Me3, (name) => new Me3.Codec(name));
         }
 
 
-        public static Container Load(Games game, byte[] data)
+        public static Container Load(Games game, byte[] data, string name)
         {
             if (!_codecs.ContainsKey(game))
             {
                 throw new GameNotSupportedException(game);
             }
 
-            Codec codec = (Codec) _codecs[game];
+            ICodec codec = _codecs[game](name);
             Container container = codec.Decode(data);
 
             return container;
         }
 
-        public static Container Load(Games game, string fileLocation)
+        public static Container Load(Games game, byte[] data)
         {
-            byte[] data = File.ReadAllBytes(fileLocation);
-
-            return Load(game, data);
+            return Load(game, data, $"New {Enum.GetName(typeof(Games), game)} Loading Codec");
         }
 
-        public static byte[] Save(Games game, Container container)
+        public static Container Load(Games game, string fileLocation, string name)
+        {
+            byte[] data = File.ReadAllBytes((fileLocation));
+
+            return Load(game, data, name);
+        }
+
+        public static Container Load(Games game, string fileLocation)
+        {
+            byte[] data = File.ReadAllBytes((fileLocation));
+
+            return Load(game, data, $"New {Enum.GetName(typeof(Games), game)} Loading Codec");
+        }
+
+
+
+
+        public static byte[] Save(Games game, Container container, string name)
         {
             if (!_codecs.ContainsKey(game))
             {
                 throw new GameNotSupportedException(game);
             }
 
-            Codec codec = (Codec) _codecs[game];
+            ICodec codec = _codecs[game](name);
             byte[] data = codec.Encode(container);
 
             return data;
         }
 
-        public static void Save(Games game, Container container, string outputLocation)
+        public static byte[] Save(Games game, Container container)
         {
-            byte[] data = Save(game, container);
+            return Save(game, container, $"New {Enum.GetName(typeof(Games), game)} Loading Codec");
+        }
+
+        public static void Save(Games game, Container container, string outputLocation, string name)
+        {
+            byte[] data = Save(game, container, name);
 
             File.WriteAllBytes(outputLocation, data);
         }
 
-        public static void Compare(byte[] oldData, byte[] newData, byte[] gibData)
+        public static void Compare(Games game, byte[] oldData, byte[] newData)
         {
-            //bool byteMatch = CompareBytes(oldData, newData);
-
-            Codec oCodec = new("old");
-            Codec nCodec = new("new");
-            Codec gCodec = new("gib");
+            ICodec oCodec = _codecs[game]("old");
+            ICodec nCodec = _codecs[game]("new");
 
             Container oContainer = oCodec.Decode(oldData);
             Container nContainer = nCodec.Decode(newData);
-            Container gContainer = gCodec.Decode(gibData);
 
             oCodec.Dump();
             nCodec.Dump();
-            gCodec.Dump();
 
             oContainer.DumpRecords("old.container.txt");
             nContainer.DumpRecords("new.container.txt");
-            gContainer.DumpRecords("gib.container.txt");
         }
 
         private static bool CompareBytes(byte[] oldData, byte[] newData)
@@ -101,7 +117,7 @@ namespace Aaron.MassEffectEditor.Coalesced
         }
 
 
-        private static void DumpStringTable(Codec codec, StreamWriter output)
+        private static void DumpStringTable(Me3.Codec codec, StreamWriter output)
         {
             foreach (var entry in codec.StringTable.Entries)
             {

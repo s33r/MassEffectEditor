@@ -2,6 +2,7 @@
 {
     public enum Games
     {
+        Unknown,
         Me1,
         Me2,
         Me3,

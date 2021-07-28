@@ -30,7 +30,6 @@ namespace Aaron.MassEffectEditor.Coalesced
             Files = new List<FileRecord>(records);
         }
 
-
         public IEnumerator<IRecord> GetEnumerator()
         {
             foreach (FileRecord fileRecord in Files)

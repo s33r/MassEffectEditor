@@ -1,66 +1,70 @@
-﻿using Aaron.MassEffectEditor.Coalesced;
+﻿using System.Collections.Generic;
+using Aaron.MassEffectEditor.Coalesced;
 using Aaron.MassEffectEditor.Core;
 using System.IO;
+using Aaron.MassEffectEditor.Coalesced.Records;
+using Newtonsoft.Json;
 
 namespace MassEffectEditor
 {
     class Program
     {
-        private static string _testInputLocation;
-        private static readonly Games _game = Games.Me1;
+
 
         static void Main(string[] args)
         {
-            
-
             Configuration.Instance.Initialize();
-            _testInputLocation = Path.Join(Configuration.Instance.WorkingLocation, 
-                Path.GetFileName(Configuration.Instance.Game[_game].CoalescedConfigurationLocation));
+
+            string m1Location = Path.Join(Configuration.Instance.WorkingLocation, "me1.annotations.json");
+            string m2Location = Path.Join(Configuration.Instance.WorkingLocation, "me2.annotations.json");
+            string m3Location = Path.Join(Configuration.Instance.WorkingLocation, "me3.annotations.json");
 
 
-            BackupCoalesced();
+            Container me1 = CoalescedFile.Load(Games.Me1,
+                Configuration.Instance.Game[Games.Me1].CoalescedConfigurationLocation);
+            Container me2 = CoalescedFile.Load(Games.Me2,
+                Configuration.Instance.Game[Games.Me2].CoalescedConfigurationLocation);
+            Container me3 = CoalescedFile.Load(Games.Me3,
+                Configuration.Instance.Game[Games.Me3].CoalescedConfigurationLocation);
 
-            string inputLocation = _testInputLocation;
-
-            Container container = CoalescedFile.Load(_game, inputLocation);
-            string name = container.Files[0].FriendlyName;
-            
-            CoalescedFile.Save(_game, container, inputLocation);
+            BuildAnnotations(Games.Me1, me1, m1Location);
+            BuildAnnotations(Games.Me2, me2, m2Location);
+            BuildAnnotations(Games.Me3, me3, m3Location);
 
 
-            Compare();
-
-            Container testContainer = CoalescedFile.Load(_game, inputLocation);
-
+            List<Annotation> me1a = LoadAnnotations(m1Location);
+            List<Annotation> me2a = LoadAnnotations(m2Location);
+            List<Annotation> me3a = LoadAnnotations(m3Location);
         }
 
-
-
-        static void BackupCoalesced()
-        {            
-            string sourceLocation = Configuration.Instance.Game[_game].CoalescedConfigurationLocation;
-            string destinationLocation = _testInputLocation;
-
-            File.Delete(destinationLocation);
-
-            File.Copy(sourceLocation, destinationLocation);
-        }
-
-
-        static void RestoreCoalesced()
+        static List<Annotation> LoadAnnotations(string inputLocation)
         {
-            string sourceLocation = _testInputLocation;
-            string destinationLocation = Configuration.Instance.Game[_game].CoalescedConfigurationLocation;
+            string json = File.ReadAllText(inputLocation);
 
-            File.Copy(sourceLocation, destinationLocation);
+            return AnnotationCollection.Deserialze(json);
         }
 
-        static void Compare()
+        static void BuildAnnotations(Games game, Container container, string outputLocation)
         {
-            byte[] original = File.ReadAllBytes(Configuration.Instance.Game[_game].CoalescedConfigurationLocation);
-            byte[] mine = File.ReadAllBytes(_testInputLocation);
+            List<Annotation> annotations = new();
 
-            CoalescedFile.Compare(_game, original, mine );
+            foreach (FileRecord fileRecord in container.Files)
+            {
+                annotations.Add(new(game, fileRecord));
+
+                foreach (SectionRecord sectionRecord in fileRecord)    
+                {
+                    annotations.Add(new(game, sectionRecord));
+                    foreach (EntryRecord entryRecord in sectionRecord)
+                    {
+                        annotations.Add(new(game, entryRecord));
+                    }
+                }
+            }
+
+
+            string json = AnnotationCollection.Serialize(game, annotations);
+            File.WriteAllText(outputLocation, json);
         }
   
     }

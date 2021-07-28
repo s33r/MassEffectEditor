@@ -51,9 +51,6 @@ namespace Aaron.MassEffectEditor.Coalesced
             return Load(game, data, $"New {Enum.GetName(typeof(Games), game)} Loading Codec");
         }
 
-
-
-
         public static byte[] Save(Games game, Container container, string name)
         {
             if (!_codecs.ContainsKey(game))

@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Aaron.MassEffectEditor.Coalesced\Aaron.MassEffectEditor.Coalesced.csproj" />
     <ProjectReference Include="..\Aaron.MassEffectEditor.Core\Aaron.MassEffectEditor.Core.csproj" />
     <ProjectReference Include="..\Aaron.MassEffectEditor.IO\Aaron.MassEffectEditor.IO.csproj" />

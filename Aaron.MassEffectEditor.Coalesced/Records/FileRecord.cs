@@ -39,6 +39,7 @@ namespace Aaron.MassEffectEditor.Coalesced.Records
         public FileRecord(string name)
             : this(new List<SectionRecord>(), name) { }
 
+
         public bool Equals(IRecord other)
         {
             if (other == null)
